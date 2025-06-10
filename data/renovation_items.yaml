@@ -1,0 +1,27 @@
+
+renovation_items:
+  - id: "sample_001"
+    itemNumber: "001"
+    category: "Cozinha"
+    description: "Bancada de granito para cozinha"
+    supplier: "Marmoraria Silva"
+    budget: 2500
+    estimatedPrice: 2300
+    purchaseDate: "15/01/2024"
+    paidValue: 2300
+    status: "Concluído"
+    paymentMethod: "PIX"
+    observations: "Instalação incluída no preço"
+
+  - id: "sample_002"
+    itemNumber: "002"
+    category: "Banheiro"
+    description: "Box de vidro temperado"
+    supplier: "Vidraçaria Central"
+    budget: 800
+    estimatedPrice: 750
+    purchaseDate: ""
+    paidValue: 0
+    status: "Pendente"
+    paymentMethod: ""
+    observations: "Aguardando aprovação do projeto"

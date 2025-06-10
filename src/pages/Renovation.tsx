@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus, FileText } from 'lucide-react';
+import { Plus, FileText, Settings } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import RenovationForm from '@/components/RenovationForm';
 import RenovationTable from '@/components/RenovationTable';
