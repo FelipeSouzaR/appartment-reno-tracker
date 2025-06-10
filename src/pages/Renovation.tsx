@@ -1,15 +1,17 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { Plus, FileText } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import RenovationForm from '@/components/RenovationForm';
 import RenovationTable from '@/components/RenovationTable';
+import RenovationReports from '@/components/RenovationReports';
 import { RenovationItem, RenovationFormData } from '@/types/renovation';
 
 const Renovation = () => {
   const [items, setItems] = useState<RenovationItem[]>([]);
   const [showForm, setShowForm] = useState(false);
+  const [showReports, setShowReports] = useState(false);
   const [editingItem, setEditingItem] = useState<RenovationItem | null>(null);
 
   const generateId = () => {
@@ -19,43 +21,55 @@ const Renovation = () => {
   const handleAddItem = () => {
     setEditingItem(null);
     setShowForm(true);
+    setShowReports(false);
+  };
+
+  const handleShowReports = () => {
+    setShowReports(true);
+    setShowForm(false);
+    setEditingItem(null);
+  };
+
+  const handleBackToTable = () => {
+    setShowForm(false);
+    setShowReports(false);
+    setEditingItem(null);
   };
 
   const handleEditItem = (item: RenovationItem) => {
     setEditingItem(item);
     setShowForm(true);
+    setShowReports(false);
   };
 
   const handleDeleteItem = (id: string) => {
     setItems(items.filter(item => item.id !== id));
     toast({
-      title: "Item deleted",
-      description: "The renovation item has been successfully deleted.",
+      title: "Item excluído",
+      description: "O item de reforma foi excluído com sucesso.",
     });
   };
 
   const handleFormSubmit = (formData: RenovationFormData) => {
     if (editingItem) {
-      // Update existing item
       setItems(items.map(item => 
         item.id === editingItem.id 
           ? { ...formData, id: editingItem.id }
           : item
       ));
       toast({
-        title: "Item updated",
-        description: "The renovation item has been successfully updated.",
+        title: "Item atualizado",
+        description: "O item de reforma foi atualizado com sucesso.",
       });
     } else {
-      // Add new item
       const newItem: RenovationItem = {
         ...formData,
         id: generateId(),
       };
       setItems([...items, newItem]);
       toast({
-        title: "Item added",
-        description: "The renovation item has been successfully added.",
+        title: "Item adicionado",
+        description: "O item de reforma foi adicionado com sucesso.",
       });
     }
     setShowForm(false);
@@ -72,15 +86,26 @@ const Renovation = () => {
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-foreground">Apartment Renovation Manager</h1>
+            <h1 className="text-4xl font-bold text-foreground">Gerenciador de Reforma do Apartamento</h1>
             <p className="text-muted-foreground mt-2">
-              Track and manage your renovation project with detailed budget control
+              Acompanhe e gerencie seu projeto de reforma com controle detalhado do orçamento
             </p>
           </div>
-          {!showForm && (
-            <Button onClick={handleAddItem} className="flex items-center space-x-2">
-              <Plus className="h-4 w-4" />
-              <span>Add Item</span>
+          {!showForm && !showReports && (
+            <div className="flex space-x-2">
+              <Button onClick={handleShowReports} variant="outline" className="flex items-center space-x-2">
+                <FileText className="h-4 w-4" />
+                <span>Relatórios</span>
+              </Button>
+              <Button onClick={handleAddItem} className="flex items-center space-x-2">
+                <Plus className="h-4 w-4" />
+                <span>Adicionar Item</span>
+              </Button>
+            </div>
+          )}
+          {(showForm || showReports) && (
+            <Button onClick={handleBackToTable} variant="outline">
+              Voltar à Lista
             </Button>
           )}
         </div>
@@ -92,6 +117,8 @@ const Renovation = () => {
             onCancel={handleFormCancel}
             isEditing={!!editingItem}
           />
+        ) : showReports ? (
+          <RenovationReports items={items} />
         ) : (
           <RenovationTable
             items={items}

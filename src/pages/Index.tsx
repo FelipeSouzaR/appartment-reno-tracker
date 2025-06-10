@@ -12,10 +12,11 @@ const Index = () => {
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-foreground mb-4">
-            Welcome to Your Project Hub
+            Bem-vindo ao Seu Hub de Projetos
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Manage your apartment renovation project with professional tools designed for tracking, budgeting, and organizing every detail.
+            Gerencie seu projeto de reforma do apartamento com ferramentas profissionais 
+            para acompanhar, orçar e organizar cada detalhe.
           </p>
         </div>
 
@@ -25,9 +26,10 @@ const Index = () => {
               <div className="mx-auto mb-4 p-3 bg-primary/10 rounded-full w-fit group-hover:bg-primary/20 transition-colors">
                 <Home className="h-8 w-8 text-primary" />
               </div>
-              <CardTitle className="text-2xl">Renovation Manager</CardTitle>
+              <CardTitle className="text-2xl">Gerenciador de Reforma</CardTitle>
               <CardDescription className="text-base">
-                Complete CRUD system for tracking your apartment renovation items, budget, and progress
+                Sistema CRUD completo para acompanhar itens da reforma do seu apartamento, 
+                orçamento e progresso com relatórios
               </CardDescription>
             </CardHeader>
             <CardContent className="text-center">
@@ -36,7 +38,7 @@ const Index = () => {
                 className="w-full"
                 size="lg"
               >
-                Start Managing
+                Começar a Gerenciar
               </Button>
             </CardContent>
           </Card>
@@ -46,14 +48,14 @@ const Index = () => {
               <div className="mx-auto mb-4 p-3 bg-secondary/20 rounded-full w-fit">
                 <Calculator className="h-8 w-8 text-secondary-foreground" />
               </div>
-              <CardTitle className="text-2xl">Budget Calculator</CardTitle>
+              <CardTitle className="text-2xl">Calculadora de Orçamento</CardTitle>
               <CardDescription className="text-base">
-                Advanced budget calculations and financial tracking for your renovation project
+                Cálculos avançados de orçamento e controle financeiro para seu projeto de reforma
               </CardDescription>
             </CardHeader>
             <CardContent className="text-center">
               <Button variant="outline" className="w-full" size="lg" disabled>
-                Coming Soon
+                Em Breve
               </Button>
             </CardContent>
           </Card>
@@ -63,14 +65,14 @@ const Index = () => {
               <div className="mx-auto mb-4 p-3 bg-accent/30 rounded-full w-fit">
                 <ClipboardList className="h-8 w-8 text-accent-foreground" />
               </div>
-              <CardTitle className="text-2xl">Progress Reports</CardTitle>
+              <CardTitle className="text-2xl">Relatórios de Progresso</CardTitle>
               <CardDescription className="text-base">
-                Generate detailed reports and visualizations of your renovation progress
+                Gere relatórios detalhados e visualizações do progresso da sua reforma
               </CardDescription>
             </CardHeader>
             <CardContent className="text-center">
               <Button variant="outline" className="w-full" size="lg" disabled>
-                Coming Soon
+                Em Breve
               </Button>
             </CardContent>
           </Card>
@@ -78,23 +80,23 @@ const Index = () => {
 
         <div className="mt-16 text-center">
           <div className="bg-card border rounded-lg p-8 max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold mb-4">Features</h2>
+            <h2 className="text-3xl font-bold mb-4">Funcionalidades</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
               <div className="space-y-2">
-                <h3 className="font-semibold text-lg">✓ Complete Item Management</h3>
-                <p className="text-muted-foreground">Add, edit, delete renovation items with full details</p>
+                <h3 className="font-semibold text-lg">✓ Gerenciamento Completo de Itens</h3>
+                <p className="text-muted-foreground">Adicione, edite, exclua itens de reforma com detalhes completos</p>
               </div>
               <div className="space-y-2">
-                <h3 className="font-semibold text-lg">✓ Budget Tracking</h3>
-                <p className="text-muted-foreground">Track budget vs actual costs in Brazilian Real (BRL)</p>
+                <h3 className="font-semibold text-lg">✓ Controle de Orçamento</h3>
+                <p className="text-muted-foreground">Acompanhe orçamento vs custos reais em Real Brasileiro (BRL)</p>
               </div>
               <div className="space-y-2">
-                <h3 className="font-semibold text-lg">✓ Status Management</h3>
-                <p className="text-muted-foreground">Monitor progress with visual status indicators</p>
+                <h3 className="font-semibold text-lg">✓ Gerenciamento de Status</h3>
+                <p className="text-muted-foreground">Monitore o progresso com indicadores visuais de status</p>
               </div>
               <div className="space-y-2">
-                <h3 className="font-semibold text-lg">✓ Supplier Information</h3>
-                <p className="text-muted-foreground">Keep track of suppliers and payment methods</p>
+                <h3 className="font-semibold text-lg">✓ Relatórios e Análises</h3>
+                <p className="text-muted-foreground">Visualize relatórios detalhados com gráficos e estatísticas</p>
               </div>
             </div>
           </div>

@@ -9,7 +9,7 @@ export interface RenovationItem {
   estimatedPrice: number;
   purchaseDate: string;
   paidValue: number;
-  status: 'Pending' | 'In Progress' | 'Completed' | 'Cancelled';
+  status: 'Pendente' | 'Em Andamento' | 'Concluído' | 'Cancelado';
   paymentMethod: string;
   observations: string;
 }
@@ -23,7 +23,7 @@ export interface RenovationFormData {
   estimatedPrice: number;
   purchaseDate: string;
   paidValue: number;
-  status: 'Pending' | 'In Progress' | 'Completed' | 'Cancelled';
+  status: 'Pendente' | 'Em Andamento' | 'Concluído' | 'Cancelado';
   paymentMethod: string;
   observations: string;
 }

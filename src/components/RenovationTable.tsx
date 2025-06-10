@@ -22,15 +22,20 @@ const RenovationTable: React.FC<RenovationTableProps> = ({ items, onEdit, onDele
 
   const formatDate = (dateString: string) => {
     if (!dateString) return '-';
-    return new Date(dateString).toLocaleDateString('pt-BR');
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
   };
 
   const getStatusBadge = (status: string) => {
     const statusColors = {
-      'Pending': 'bg-yellow-100 text-yellow-800 border-yellow-300',
-      'In Progress': 'bg-blue-100 text-blue-800 border-blue-300',
-      'Completed': 'bg-green-100 text-green-800 border-green-300',
-      'Cancelled': 'bg-red-100 text-red-800 border-red-300',
+      'Pendente': 'bg-yellow-100 text-yellow-800 border-yellow-300',
+      'Em Andamento': 'bg-blue-100 text-blue-800 border-blue-300',
+      'Concluído': 'bg-green-100 text-green-800 border-green-300',
+      'Cancelado': 'bg-red-100 text-red-800 border-red-300',
     };
     
     return (
@@ -52,7 +57,7 @@ const RenovationTable: React.FC<RenovationTableProps> = ({ items, onEdit, onDele
     return (
       <Card>
         <CardContent className="text-center py-8">
-          <p className="text-muted-foreground">No renovation items added yet. Create your first item to get started!</p>
+          <p className="text-muted-foreground">Nenhum item de reforma adicionado ainda. Crie seu primeiro item para começar!</p>
         </CardContent>
       </Card>
     );
@@ -63,19 +68,19 @@ const RenovationTable: React.FC<RenovationTableProps> = ({ items, onEdit, onDele
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardContent className="p-4">
-            <div className="text-sm text-muted-foreground">Total Budget</div>
+            <div className="text-sm text-muted-foreground">Orçamento Total</div>
             <div className="text-2xl font-bold text-primary">{formatCurrency(getTotalBudget())}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-sm text-muted-foreground">Total Paid</div>
+            <div className="text-sm text-muted-foreground">Total Pago</div>
             <div className="text-2xl font-bold text-green-600">{formatCurrency(getTotalPaid())}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-sm text-muted-foreground">Remaining</div>
+            <div className="text-sm text-muted-foreground">Restante</div>
             <div className="text-2xl font-bold text-orange-600">{formatCurrency(getTotalBudget() - getTotalPaid())}</div>
           </CardContent>
         </Card>
@@ -83,7 +88,7 @@ const RenovationTable: React.FC<RenovationTableProps> = ({ items, onEdit, onDele
 
       <Card>
         <CardHeader>
-          <CardTitle>Renovation Items ({items.length})</CardTitle>
+          <CardTitle>Itens de Reforma ({items.length})</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -91,15 +96,15 @@ const RenovationTable: React.FC<RenovationTableProps> = ({ items, onEdit, onDele
               <thead>
                 <tr className="border-b">
                   <th className="text-left p-2 font-semibold">Item #</th>
-                  <th className="text-left p-2 font-semibold">Category</th>
-                  <th className="text-left p-2 font-semibold">Description</th>
-                  <th className="text-left p-2 font-semibold">Supplier</th>
-                  <th className="text-left p-2 font-semibold">Budget</th>
-                  <th className="text-left p-2 font-semibold">Estimated</th>
-                  <th className="text-left p-2 font-semibold">Paid</th>
-                  <th className="text-left p-2 font-semibold">Date</th>
+                  <th className="text-left p-2 font-semibold">Categoria</th>
+                  <th className="text-left p-2 font-semibold">Descrição</th>
+                  <th className="text-left p-2 font-semibold">Fornecedor</th>
+                  <th className="text-left p-2 font-semibold">Orçamento</th>
+                  <th className="text-left p-2 font-semibold">Estimado</th>
+                  <th className="text-left p-2 font-semibold">Pago</th>
+                  <th className="text-left p-2 font-semibold">Data</th>
                   <th className="text-left p-2 font-semibold">Status</th>
-                  <th className="text-left p-2 font-semibold">Actions</th>
+                  <th className="text-left p-2 font-semibold">Ações</th>
                 </tr>
               </thead>
               <tbody>
