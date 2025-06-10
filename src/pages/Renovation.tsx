@@ -93,6 +93,10 @@ const Renovation = () => {
           </div>
           {!showForm && !showReports && (
             <div className="flex space-x-2">
+              <Button onClick={() => window.location.href = '/configuration'} variant="outline" className="flex items-center space-x-2">
+                <Settings className="h-4 w-4" />
+                <span>Configuração</span>
+              </Button>
               <Button onClick={handleShowReports} variant="outline" className="flex items-center space-x-2">
                 <FileText className="h-4 w-4" />
                 <span>Relatórios</span>
