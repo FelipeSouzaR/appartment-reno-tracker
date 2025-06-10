@@ -9,6 +9,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  base: '/appartment-reno-tracker/', // Substitua pelo nome exato do seu repositório
   plugins: [
     react(),
     mode === 'development' &&
