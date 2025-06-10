@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus, FileText, Settings } from 'lucide-react';
+import { Plus, FileText, Settings, Home } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import RenovationForm from '@/components/RenovationForm';
 import RenovationTable from '@/components/RenovationTable';
@@ -92,6 +93,10 @@ const Renovation = () => {
           </div>
           {!showForm && !showReports && (
             <div className="flex space-x-2">
+              <Button onClick={() => window.location.href = '/'} variant="outline" className="flex items-center space-x-2">
+                <Home className="h-4 w-4" />
+                <span>Início</span>
+              </Button>
               <Button onClick={() => window.location.href = '/configuration'} variant="outline" className="flex items-center space-x-2">
                 <Settings className="h-4 w-4" />
                 <span>Configuração</span>
@@ -107,9 +112,15 @@ const Renovation = () => {
             </div>
           )}
           {(showForm || showReports) && (
-            <Button onClick={handleBackToTable} variant="outline">
-              Voltar à Lista
-            </Button>
+            <div className="flex space-x-2">
+              <Button onClick={() => window.location.href = '/'} variant="outline" className="flex items-center space-x-2">
+                <Home className="h-4 w-4" />
+                <span>Início</span>
+              </Button>
+              <Button onClick={handleBackToTable} variant="outline">
+                Voltar à Lista
+              </Button>
+            </div>
           )}
         </div>
 

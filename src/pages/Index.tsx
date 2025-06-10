@@ -1,8 +1,7 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import { Home, Calculator, ClipboardList } from "lucide-react";
+import { Home, Calculator, ClipboardList, FileText } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -29,16 +28,25 @@ const Index = () => {
               <CardTitle className="text-2xl">Gerenciador de Reforma</CardTitle>
               <CardDescription className="text-base">
                 Sistema CRUD completo para acompanhar itens da reforma do seu apartamento, 
-                orçamento e progresso com relatórios
+                orçamento e progresso
               </CardDescription>
             </CardHeader>
-            <CardContent className="text-center">
+            <CardContent className="text-center space-y-2">
               <Button 
                 onClick={() => navigate('/renovation')}
                 className="w-full"
                 size="lg"
               >
                 Começar a Gerenciar
+              </Button>
+              <Button 
+                onClick={() => navigate('/renovation?tab=reports')}
+                variant="outline"
+                className="w-full"
+                size="sm"
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                Ver Relatórios
               </Button>
             </CardContent>
           </Card>
