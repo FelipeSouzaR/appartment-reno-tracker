@@ -5,6 +5,9 @@ on:
     branches:
       - main # Altere para a branch principal do seu projeto (ex: master ou main)
 
+permissions: # Adicione esta seção
+  contents: write # Permite que o workflow escreva no repositório
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
