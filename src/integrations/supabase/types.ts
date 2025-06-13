@@ -9,10 +9,35 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       renovation_items: {
         Row: {
           budget: number
           category: string
+          category_id: string | null
           created_at: string
           description: string
           estimated_price: number
@@ -24,11 +49,13 @@ export type Database = {
           purchase_date: string | null
           status: string
           supplier: string
+          supplier_id: string | null
           updated_at: string
         }
         Insert: {
           budget?: number
           category: string
+          category_id?: string | null
           created_at?: string
           description: string
           estimated_price?: number
@@ -40,11 +67,13 @@ export type Database = {
           purchase_date?: string | null
           status?: string
           supplier: string
+          supplier_id?: string | null
           updated_at?: string
         }
         Update: {
           budget?: number
           category?: string
+          category_id?: string | null
           created_at?: string
           description?: string
           estimated_price?: number
@@ -56,6 +85,55 @@ export type Database = {
           purchase_date?: string | null
           status?: string
           supplier?: string
+          supplier_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "renovation_items_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "renovation_items_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      suppliers: {
+        Row: {
+          address: string | null
+          contact_info: string | null
+          created_at: string
+          email: string | null
+          id: string
+          name: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          contact_info?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          contact_info?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string
+          phone?: string | null
           updated_at?: string
         }
         Relationships: []

@@ -7,6 +7,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RenovationFormData, RenovationItem } from '@/types/renovation';
+import { useCategories } from '@/hooks/useCategories';
+import { useSuppliers } from '@/hooks/useSuppliers';
 
 interface RenovationFormProps {
   item?: RenovationItem;
@@ -16,11 +18,14 @@ interface RenovationFormProps {
 }
 
 const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCancel, isEditing }) => {
+  const { categories, loading: categoriesLoading } = useCategories();
+  const { suppliers, loading: suppliersLoading } = useSuppliers();
+  
   const [formData, setFormData] = React.useState<RenovationFormData>({
     itemNumber: item?.itemNumber || '',
-    category: item?.category || '',
+    categoryId: item?.categoryId || '',
+    supplierId: item?.supplierId || '',
     description: item?.description || '',
-    supplier: item?.supplier || '',
     budget: item?.budget || 0,
     estimatedPrice: item?.estimatedPrice || 0,
     purchaseDate: item?.purchaseDate || '',
@@ -60,14 +65,23 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="category">Categoria</Label>
-              <Input
-                id="category"
-                value={formData.category}
-                onChange={(e) => handleInputChange('category', e.target.value)}
-                placeholder="ex: Cozinha, Banheiro, Sala"
-                required
-              />
+              <Label htmlFor="categoryId">Categoria</Label>
+              <Select value={formData.categoryId} onValueChange={(value) => handleInputChange('categoryId', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione uma categoria" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categoriesLoading ? (
+                    <SelectItem value="" disabled>Carregando...</SelectItem>
+                  ) : (
+                    categories.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name}
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -85,14 +99,23 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="supplier">Fornecedor</Label>
-              <Input
-                id="supplier"
-                value={formData.supplier}
-                onChange={(e) => handleInputChange('supplier', e.target.value)}
-                placeholder="Nome do fornecedor"
-                required
-              />
+              <Label htmlFor="supplierId">Fornecedor</Label>
+              <Select value={formData.supplierId} onValueChange={(value) => handleInputChange('supplierId', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione um fornecedor" />
+                </SelectTrigger>
+                <SelectContent>
+                  {suppliersLoading ? (
+                    <SelectItem value="" disabled>Carregando...</SelectItem>
+                  ) : (
+                    suppliers.map((supplier) => (
+                      <SelectItem key={supplier.id} value={supplier.id}>
+                        {supplier.name}
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-2">
               <Label htmlFor="paymentMethod">Forma de Pagamento</Label>

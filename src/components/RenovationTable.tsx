@@ -20,7 +20,7 @@ const RenovationTable: React.FC<RenovationTableProps> = ({ items, onEdit, onDele
     }).format(value);
   };
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString?: string) => {
     if (!dateString) return '-';
     const date = new Date(dateString);
     return date.toLocaleDateString('pt-BR', {
@@ -111,11 +111,11 @@ const RenovationTable: React.FC<RenovationTableProps> = ({ items, onEdit, onDele
                 {items.map((item) => (
                   <tr key={item.id} className="border-b hover:bg-muted/50">
                     <td className="p-2 font-mono text-sm">{item.itemNumber}</td>
-                    <td className="p-2">{item.category}</td>
+                    <td className="p-2">{item.category_data?.name || item.category || '-'}</td>
                     <td className="p-2 max-w-xs truncate" title={item.description}>
                       {item.description}
                     </td>
-                    <td className="p-2">{item.supplier}</td>
+                    <td className="p-2">{item.supplier_data?.name || item.supplier || '-'}</td>
                     <td className="p-2 text-right">{formatCurrency(item.budget)}</td>
                     <td className="p-2 text-right">{formatCurrency(item.estimatedPrice)}</td>
                     <td className="p-2 text-right">{formatCurrency(item.paidValue)}</td>

@@ -44,7 +44,8 @@ const RenovationReports: React.FC<RenovationReportsProps> = ({ items }) => {
 
   const getCategoryData = () => {
     const categoryBudget = items.reduce((acc, item) => {
-      acc[item.category] = (acc[item.category] || 0) + item.budget;
+      const categoryName = item.category_data?.name || item.category || 'Sem categoria';
+      acc[categoryName] = (acc[categoryName] || 0) + item.budget;
       return acc;
     }, {} as Record<string, number>);
 
@@ -212,7 +213,7 @@ const RenovationReports: React.FC<RenovationReportsProps> = ({ items }) => {
                     </div>
                     <h4 className="font-semibold mt-1">{item.description}</h4>
                     <p className="text-sm text-muted-foreground">
-                      {item.category} • {item.supplier} • {formatCurrency(item.budget)}
+                      {item.category_data?.name || item.category || 'Sem categoria'} • {item.supplier_data?.name || item.supplier || 'Sem fornecedor'} • {formatCurrency(item.budget)}
                     </p>
                   </div>
                 </div>
