@@ -11,7 +11,7 @@ interface UseEntityCRUDOptions<T> {
   transform?: (data: any) => T;
 }
 
-export const useEntityCRUD = <T extends { id: string }, TFormData>(
+export const useEntityCRUD = <T extends { id: string }, TFormData = any>(
   options: UseEntityCRUDOptions<T>
 ) => {
   const [entities, setEntities] = useState<T[]>([]);
@@ -20,7 +20,7 @@ export const useEntityCRUD = <T extends { id: string }, TFormData>(
 
   const fetchEntities = async () => {
     try {
-      let query = supabase.from(tableName).select(select);
+      let query = supabase.from(tableName as any).select(select);
       
       if (orderBy) {
         query = query.order(orderBy.column, { ascending: orderBy.ascending ?? false });
@@ -31,7 +31,7 @@ export const useEntityCRUD = <T extends { id: string }, TFormData>(
       
       const transformedData = transform 
         ? (data || []).map(transform)
-        : (data || []) as T[];
+        : (data || []) as unknown as T[];
       
       setEntities(transformedData);
     } catch (error) {
@@ -49,14 +49,14 @@ export const useEntityCRUD = <T extends { id: string }, TFormData>(
   const createEntity = async (formData: TFormData) => {
     try {
       const { data, error } = await supabase
-        .from(tableName)
-        .insert(formData)
+        .from(tableName as any)
+        .insert(formData as any)
         .select(select)
         .single();
 
       if (error) throw error;
       
-      const transformedData = transform ? transform(data) : data as T;
+      const transformedData = transform ? transform(data) : data as unknown as T;
       setEntities(prev => [transformedData, ...prev]);
       
       toast({
@@ -78,15 +78,15 @@ export const useEntityCRUD = <T extends { id: string }, TFormData>(
   const updateEntity = async (id: string, formData: Partial<TFormData>) => {
     try {
       const { data, error } = await supabase
-        .from(tableName)
-        .update({ ...formData, updated_at: new Date().toISOString() })
+        .from(tableName as any)
+        .update({ ...formData, updated_at: new Date().toISOString() } as any)
         .eq('id', id)
         .select(select)
         .single();
 
       if (error) throw error;
 
-      const transformedData = transform ? transform(data) : data as T;
+      const transformedData = transform ? transform(data) : data as unknown as T;
       setEntities(prev => prev.map(entity => 
         entity.id === id ? transformedData : entity
       ));
@@ -110,7 +110,7 @@ export const useEntityCRUD = <T extends { id: string }, TFormData>(
   const deleteEntity = async (id: string) => {
     try {
       const { error } = await supabase
-        .from(tableName)
+        .from(tableName as any)
         .delete()
         .eq('id', id);
 
