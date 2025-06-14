@@ -1,7 +1,8 @@
 
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { useOptimizedCallbacks } from '@/hooks/useOptimizedRender';
 
 interface UseEntityCRUDOptions<T> {
   tableName: string;
@@ -18,7 +19,7 @@ export const useEntityCRUD = <T extends { id: string }, TFormData = any>(
   const [loading, setLoading] = useState(true);
   const { tableName, entityName, orderBy, select = '*', transform } = options;
 
-  const fetchEntities = async () => {
+  const fetchEntities = useCallback(async () => {
     try {
       let query = supabase.from(tableName as any).select(select);
       
@@ -44,9 +45,9 @@ export const useEntityCRUD = <T extends { id: string }, TFormData = any>(
     } finally {
       setLoading(false);
     }
-  };
+  }, [tableName, entityName, orderBy, select, transform]);
 
-  const createEntity = async (formData: TFormData) => {
+  const createEntity = useCallback(async (formData: TFormData) => {
     try {
       const { data, error } = await supabase
         .from(tableName as any)
@@ -73,9 +74,9 @@ export const useEntityCRUD = <T extends { id: string }, TFormData = any>(
       });
       throw error;
     }
-  };
+  }, [tableName, entityName, select, transform]);
 
-  const updateEntity = async (id: string, formData: Partial<TFormData>) => {
+  const updateEntity = useCallback(async (id: string, formData: Partial<TFormData>) => {
     try {
       const { data, error } = await supabase
         .from(tableName as any)
@@ -105,9 +106,9 @@ export const useEntityCRUD = <T extends { id: string }, TFormData = any>(
       });
       throw error;
     }
-  };
+  }, [tableName, entityName, select, transform]);
 
-  const deleteEntity = async (id: string) => {
+  const deleteEntity = useCallback(async (id: string) => {
     try {
       const { error } = await supabase
         .from(tableName as any)
@@ -130,15 +131,23 @@ export const useEntityCRUD = <T extends { id: string }, TFormData = any>(
       });
       throw error;
     }
-  };
+  }, [tableName, entityName]);
 
-  return {
-    entities,
-    loading,
+  // Optimize callbacks for better performance
+  const optimizedCallbacks = useOptimizedCallbacks({
     createEntity,
     updateEntity,
     deleteEntity,
     refreshEntities: fetchEntities,
+  }, [createEntity, updateEntity, deleteEntity, fetchEntities]);
+
+  // Memoize the return object to prevent unnecessary re-renders
+  const returnValue = useMemo(() => ({
+    entities,
+    loading,
+    ...optimizedCallbacks,
     setEntities,
-  };
+  }), [entities, loading, optimizedCallbacks]);
+
+  return returnValue;
 };
