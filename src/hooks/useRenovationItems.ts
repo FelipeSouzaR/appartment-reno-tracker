@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { RenovationItem, RenovationFormData } from '@/types/renovation';
@@ -20,25 +21,40 @@ export const useRenovationItems = () => {
 
       if (error) throw error;
       
-      const transformedData = (data || []).map(item => ({
+      const transformedData: RenovationItem[] = (data || []).map(item => ({
         id: item.id,
         itemNumber: item.item_number,
-        category: item.category, // Legacy field
-        categoryId: item.category_id,
-        supplier: item.supplier, // Legacy field
-        supplierId: item.supplier_id,
+        category: item.category || '', // Legacy field
+        categoryId: item.category_id || '',
+        supplier: item.supplier || '', // Legacy field
+        supplierId: item.supplier_id || '',
         description: item.description,
         budget: Number(item.budget),
         estimatedPrice: Number(item.estimated_price),
-        purchaseDate: item.purchase_date,
+        purchaseDate: item.purchase_date || undefined,
         paidValue: Number(item.paid_value),
         status: item.status as 'Pendente' | 'Em Andamento' | 'Concluído' | 'Cancelado',
-        paymentMethod: item.payment_method,
-        observations: item.observations,
+        paymentMethod: item.payment_method || undefined,
+        observations: item.observations || undefined,
         created_at: item.created_at,
         updated_at: item.updated_at,
-        category_data: item.category_data,
-        supplier_data: item.supplier_data,
+        category_data: item.category_data ? {
+          id: item.category_data.id,
+          name: item.category_data.name,
+          description: item.category_data.description || undefined,
+          created_at: item.category_data.created_at,
+          updated_at: item.category_data.updated_at,
+        } : undefined,
+        supplier_data: item.supplier_data ? {
+          id: item.supplier_data.id,
+          name: item.supplier_data.name,
+          contact_info: item.supplier_data.contact_info || undefined,
+          phone: item.supplier_data.phone || undefined,
+          email: item.supplier_data.email || undefined,
+          address: item.supplier_data.address || undefined,
+          created_at: item.supplier_data.created_at,
+          updated_at: item.supplier_data.updated_at,
+        } : undefined,
       }));
 
       setItems(transformedData);
@@ -86,22 +102,37 @@ export const useRenovationItems = () => {
       const transformedItem: RenovationItem = {
         id: data.id,
         itemNumber: data.item_number,
-        category: data.category,
-        categoryId: data.category_id,
-        supplier: data.supplier,
-        supplierId: data.supplier_id,
+        category: data.category || '',
+        categoryId: data.category_id || '',
+        supplier: data.supplier || '',
+        supplierId: data.supplier_id || '',
         description: data.description,
         budget: Number(data.budget),
         estimatedPrice: Number(data.estimated_price),
-        purchaseDate: data.purchase_date,
+        purchaseDate: data.purchase_date || undefined,
         paidValue: Number(data.paid_value),
         status: data.status as 'Pendente' | 'Em Andamento' | 'Concluído' | 'Cancelado',
-        paymentMethod: data.payment_method,
-        observations: data.observations,
+        paymentMethod: data.payment_method || undefined,
+        observations: data.observations || undefined,
         created_at: data.created_at,
         updated_at: data.updated_at,
-        category_data: data.category_data,
-        supplier_data: data.supplier_data,
+        category_data: data.category_data ? {
+          id: data.category_data.id,
+          name: data.category_data.name,
+          description: data.category_data.description || undefined,
+          created_at: data.category_data.created_at,
+          updated_at: data.category_data.updated_at,
+        } : undefined,
+        supplier_data: data.supplier_data ? {
+          id: data.supplier_data.id,
+          name: data.supplier_data.name,
+          contact_info: data.supplier_data.contact_info || undefined,
+          phone: data.supplier_data.phone || undefined,
+          email: data.supplier_data.email || undefined,
+          address: data.supplier_data.address || undefined,
+          created_at: data.supplier_data.created_at,
+          updated_at: data.supplier_data.updated_at,
+        } : undefined,
       };
 
       setItems(prev => [transformedItem, ...prev]);
@@ -152,22 +183,37 @@ export const useRenovationItems = () => {
       const transformedItem: RenovationItem = {
         id: data.id,
         itemNumber: data.item_number,
-        category: data.category,
-        categoryId: data.category_id,
-        supplier: data.supplier,
-        supplierId: data.supplier_id,
+        category: data.category || '',
+        categoryId: data.category_id || '',
+        supplier: data.supplier || '',
+        supplierId: data.supplier_id || '',
         description: data.description,
         budget: Number(data.budget),
         estimatedPrice: Number(data.estimated_price),
-        purchaseDate: data.purchase_date,
+        purchaseDate: data.purchase_date || undefined,
         paidValue: Number(data.paid_value),
         status: data.status as 'Pendente' | 'Em Andamento' | 'Concluído' | 'Cancelado',
-        paymentMethod: data.payment_method,
-        observations: data.observations,
+        paymentMethod: data.payment_method || undefined,
+        observations: data.observations || undefined,
         created_at: data.created_at,
         updated_at: data.updated_at,
-        category_data: data.category_data,
-        supplier_data: data.supplier_data,
+        category_data: data.category_data ? {
+          id: data.category_data.id,
+          name: data.category_data.name,
+          description: data.category_data.description || undefined,
+          created_at: data.category_data.created_at,
+          updated_at: data.category_data.updated_at,
+        } : undefined,
+        supplier_data: data.supplier_data ? {
+          id: data.supplier_data.id,
+          name: data.supplier_data.name,
+          contact_info: data.supplier_data.contact_info || undefined,
+          phone: data.supplier_data.phone || undefined,
+          email: data.supplier_data.email || undefined,
+          address: data.supplier_data.address || undefined,
+          created_at: data.supplier_data.created_at,
+          updated_at: data.supplier_data.updated_at,
+        } : undefined,
       };
 
       setItems(prev => prev.map(item => item.id === id ? transformedItem : item));
