@@ -62,13 +62,14 @@ export class PerformanceMonitor {
   startObserving(): void {
     if (typeof window === 'undefined') return;
 
-    // Observe navigation timing with correct properties
+    // Observe navigation timing
     const navObserver = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
         if (entry.entryType === 'navigation') {
           const navEntry = entry as PerformanceNavigationTiming;
           this.recordMetric('page-load', navEntry.loadEventEnd - navEntry.fetchStart);
           this.recordMetric('dom-content-loaded', navEntry.domContentLoadedEventEnd - navEntry.fetchStart);
+          this.recordMetric('first-contentful-paint', navEntry.loadEventEnd - navEntry.fetchStart);
         }
       }
     });
@@ -88,6 +89,16 @@ export class PerformanceMonitor {
 
     resourceObserver.observe({ entryTypes: ['resource'] });
     this.observers.push(resourceObserver);
+
+    // Observe largest contentful paint
+    const lcpObserver = new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        this.recordMetric('largest-contentful-paint', entry.startTime);
+      }
+    });
+
+    lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+    this.observers.push(lcpObserver);
   }
 
   stopObserving(): void {
