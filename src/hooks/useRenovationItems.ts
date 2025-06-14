@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { RenovationItem, RenovationFormData } from '@/types/renovation';
@@ -14,8 +13,8 @@ export const useRenovationItems = () => {
         .from('renovation_items')
         .select(`
           *,
-          category_data:categories(id, name, description),
-          supplier_data:suppliers(id, name, contact_info, phone, email)
+          category_data:categories(id, name, description, created_at, updated_at),
+          supplier_data:suppliers(id, name, contact_info, phone, email, created_at, updated_at)
         `)
         .order('created_at', { ascending: false });
 
@@ -59,7 +58,7 @@ export const useRenovationItems = () => {
     try {
       const { data, error } = await supabase
         .from('renovation_items')
-        .insert([{
+        .insert({
           item_number: formData.itemNumber,
           category_id: formData.categoryId,
           supplier_id: formData.supplierId,
@@ -71,20 +70,25 @@ export const useRenovationItems = () => {
           status: formData.status,
           payment_method: formData.paymentMethod || null,
           observations: formData.observations || null,
-        }])
+          // Keep legacy fields for now
+          category: '',
+          supplier: '',
+        })
         .select(`
           *,
-          category_data:categories(id, name, description),
-          supplier_data:suppliers(id, name, contact_info, phone, email)
+          category_data:categories(id, name, description, created_at, updated_at),
+          supplier_data:suppliers(id, name, contact_info, phone, email, created_at, updated_at)
         `)
         .single();
 
       if (error) throw error;
       
-      const transformedItem = {
+      const transformedItem: RenovationItem = {
         id: data.id,
         itemNumber: data.item_number,
+        category: data.category,
         categoryId: data.category_id,
+        supplier: data.supplier,
         supplierId: data.supplier_id,
         description: data.description,
         budget: Number(data.budget),
@@ -138,17 +142,19 @@ export const useRenovationItems = () => {
         .eq('id', id)
         .select(`
           *,
-          category_data:categories(id, name, description),
-          supplier_data:suppliers(id, name, contact_info, phone, email)
+          category_data:categories(id, name, description, created_at, updated_at),
+          supplier_data:suppliers(id, name, contact_info, phone, email, created_at, updated_at)
         `)
         .single();
 
       if (error) throw error;
 
-      const transformedItem = {
+      const transformedItem: RenovationItem = {
         id: data.id,
         itemNumber: data.item_number,
+        category: data.category,
         categoryId: data.category_id,
+        supplier: data.supplier,
         supplierId: data.supplier_id,
         description: data.description,
         budget: Number(data.budget),
