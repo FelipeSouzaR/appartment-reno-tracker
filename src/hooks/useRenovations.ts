@@ -16,7 +16,7 @@ export const useRenovations = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setRenovations(data || []);
+      setRenovations((data || []) as Renovation[]);
     } catch (error) {
       console.error('Error fetching renovations:', error);
       toast({
@@ -45,12 +45,12 @@ export const useRenovations = () => {
 
       if (error) throw error;
       
-      setRenovations(prev => [data, ...prev]);
+      setRenovations(prev => [data as Renovation, ...prev]);
       toast({
         title: "Sucesso",
         description: "Reforma criada com sucesso.",
       });
-      return data;
+      return data as Renovation;
     } catch (error) {
       console.error('Error creating renovation:', error);
       toast({
@@ -73,12 +73,12 @@ export const useRenovations = () => {
 
       if (error) throw error;
 
-      setRenovations(prev => prev.map(ren => ren.id === id ? data : ren));
+      setRenovations(prev => prev.map(ren => ren.id === id ? data as Renovation : ren));
       toast({
         title: "Sucesso",
         description: "Reforma atualizada com sucesso.",
       });
-      return data;
+      return data as Renovation;
     } catch (error) {
       console.error('Error updating renovation:', error);
       toast({
