@@ -1,3 +1,4 @@
+
 // Performance monitoring utilities
 export class PerformanceMonitor {
   private static instance: PerformanceMonitor;
@@ -61,13 +62,13 @@ export class PerformanceMonitor {
   startObserving(): void {
     if (typeof window === 'undefined') return;
 
-    // Observe navigation timing
+    // Observe navigation timing with correct properties
     const navObserver = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
         if (entry.entryType === 'navigation') {
           const navEntry = entry as PerformanceNavigationTiming;
-          this.recordMetric('page-load', navEntry.loadEventEnd - navEntry.navigationStart);
-          this.recordMetric('dom-content-loaded', navEntry.domContentLoadedEventEnd - navEntry.navigationStart);
+          this.recordMetric('page-load', navEntry.loadEventEnd - navEntry.fetchStart);
+          this.recordMetric('dom-content-loaded', navEntry.domContentLoadedEventEnd - navEntry.fetchStart);
         }
       }
     });
