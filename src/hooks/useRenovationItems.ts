@@ -15,7 +15,7 @@ export const useRenovationItems = () => {
         .select(`
           *,
           category_data:categories(id, name, description, created_at, updated_at),
-          supplier_data:suppliers(id, name, contact_info, phone, email, created_at, updated_at)
+          supplier_data:suppliers(id, name, contact_info, phone, email, address, created_at, updated_at)
         `)
         .order('created_at', { ascending: false });
 
@@ -93,7 +93,7 @@ export const useRenovationItems = () => {
         .select(`
           *,
           category_data:categories(id, name, description, created_at, updated_at),
-          supplier_data:suppliers(id, name, contact_info, phone, email, created_at, updated_at)
+          supplier_data:suppliers(id, name, contact_info, phone, email, address, created_at, updated_at)
         `)
         .single();
 
@@ -174,7 +174,7 @@ export const useRenovationItems = () => {
         .select(`
           *,
           category_data:categories(id, name, description, created_at, updated_at),
-          supplier_data:suppliers(id, name, contact_info, phone, email, created_at, updated_at)
+          supplier_data:suppliers(id, name, contact_info, phone, email, address, created_at, updated_at)
         `)
         .single();
 
