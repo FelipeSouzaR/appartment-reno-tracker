@@ -1,24 +1,42 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus, FileText, Settings, Home, Building2 } from 'lucide-react';
+import { Plus, FileText, Settings, Home, Building2, LogOut } from 'lucide-react';
 import RenovationForm from '@/components/RenovationForm';
 import RenovationTable from '@/components/RenovationTable';
 import RenovationReports from '@/components/RenovationReports';
+import RenovationSelector from '@/components/RenovationSelector';
 import CategoryManagement from '@/components/CategoryManagement';
 import SupplierManagement from '@/components/SupplierManagement';
 import { useRenovationItems } from '@/hooks/useRenovationItems';
-import { RenovationItem } from '@/types/renovation';
+import { useAuth } from '@/hooks/useAuth';
+import { RenovationItem, Renovation } from '@/types/renovation';
+import { useNavigate } from 'react-router-dom';
 
-const Renovation = () => {
-  const { items, loading, createItem, updateItem, deleteItem } = useRenovationItems();
+const RenovationPage = () => {
+  const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
+  const [selectedRenovation, setSelectedRenovation] = useState<Renovation | null>(null);
+  const { items, loading, createItem, updateItem, deleteItem, refreshItems } = useRenovationItems(selectedRenovation?.id);
   const [showForm, setShowForm] = useState(false);
   const [showReports, setShowReports] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
   const [showSuppliers, setShowSuppliers] = useState(false);
   const [editingItem, setEditingItem] = useState<RenovationItem | null>(null);
 
+  // Redirect to auth if not logged in
+  useEffect(() => {
+    if (!user) {
+      navigate('/auth');
+    }
+  }, [user, navigate]);
+
+  if (!user) {
+    return null;
+  }
+
   const handleAddItem = () => {
+    if (!selectedRenovation) return;
     setEditingItem(null);
     setShowForm(true);
     setShowReports(false);
@@ -58,6 +76,11 @@ const Renovation = () => {
     setEditingItem(null);
   };
 
+  const handleBackToRenovations = () => {
+    setSelectedRenovation(null);
+    handleBackToTable();
+  };
+
   const handleEditItem = (item: RenovationItem) => {
     setEditingItem(item);
     setShowForm(true);
@@ -74,10 +97,15 @@ const Renovation = () => {
 
   const handleFormSubmit = async (formData: any) => {
     try {
+      const itemData = {
+        ...formData,
+        renovation_id: selectedRenovation!.id,
+      };
+      
       if (editingItem) {
-        await updateItem(editingItem.id, formData);
+        await updateItem(editingItem.id, itemData);
       } else {
-        await createItem(formData);
+        await createItem(itemData);
       }
       setShowForm(false);
       setEditingItem(null);
@@ -91,25 +119,65 @@ const Renovation = () => {
     setEditingItem(null);
   };
 
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
+
   const showingManagement = showCategories || showSuppliers;
+
+  if (!selectedRenovation) {
+    return (
+      <div className="min-h-screen bg-background p-4">
+        <div className="max-w-7xl mx-auto space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-bold text-foreground">Gerenciador de Reformas</h1>
+              <p className="text-muted-foreground mt-2">
+                Bem-vindo, {profile?.username || user.email}
+              </p>
+            </div>
+            <div className="flex space-x-2">
+              <Button onClick={() => navigate('/')} variant="outline" className="flex items-center space-x-2">
+                <Home className="h-4 w-4" />
+                <span>Início</span>
+              </Button>
+              <Button onClick={handleSignOut} variant="outline" className="flex items-center space-x-2">
+                <LogOut className="h-4 w-4" />
+                <span>Sair</span>
+              </Button>
+            </div>
+          </div>
+          <RenovationSelector 
+            onSelectRenovation={setSelectedRenovation}
+            selectedRenovation={selectedRenovation}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background p-4">
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-foreground">Gerenciador de Reforma do Apartamento</h1>
+            <h1 className="text-4xl font-bold text-foreground">{selectedRenovation.name}</h1>
             <p className="text-muted-foreground mt-2">
-              Acompanhe e gerencie seu projeto de reforma com controle detalhado do orçamento
+              {selectedRenovation.description || 'Acompanhe e gerencie seu projeto de reforma'}
             </p>
           </div>
           {!showForm && !showReports && !showingManagement && (
             <div className="flex space-x-2">
-              <Button onClick={() => window.location.href = '/'} variant="outline" className="flex items-center space-x-2">
+              <Button onClick={() => navigate('/')} variant="outline" className="flex items-center space-x-2">
                 <Home className="h-4 w-4" />
                 <span>Início</span>
               </Button>
-              <Button onClick={() => window.location.href = '/configuration'} variant="outline" className="flex items-center space-x-2">
+              <Button onClick={handleBackToRenovations} variant="outline" className="flex items-center space-x-2">
+                <Building2 className="h-4 w-4" />
+                <span>Reformas</span>
+              </Button>
+              <Button onClick={() => navigate('/configuration')} variant="outline" className="flex items-center space-x-2">
                 <Settings className="h-4 w-4" />
                 <span>Configuração</span>
               </Button>
@@ -133,9 +201,13 @@ const Renovation = () => {
           )}
           {(showForm || showReports || showingManagement) && (
             <div className="flex space-x-2">
-              <Button onClick={() => window.location.href = '/'} variant="outline" className="flex items-center space-x-2">
+              <Button onClick={() => navigate('/')} variant="outline" className="flex items-center space-x-2">
                 <Home className="h-4 w-4" />
                 <span>Início</span>
+              </Button>
+              <Button onClick={handleBackToRenovations} variant="outline" className="flex items-center space-x-2">
+                <Building2 className="h-4 w-4" />
+                <span>Reformas</span>
               </Button>
               <Button onClick={handleBackToTable} variant="outline">
                 Voltar à Lista
@@ -171,4 +243,4 @@ const Renovation = () => {
   );
 };
 
-export default Renovation;
+export default RenovationPage;

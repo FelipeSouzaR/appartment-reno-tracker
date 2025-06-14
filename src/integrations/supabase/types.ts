@@ -33,6 +33,30 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          created_at: string
+          full_name: string | null
+          id: string
+          updated_at: string
+          username: string
+        }
+        Insert: {
+          created_at?: string
+          full_name?: string | null
+          id: string
+          updated_at?: string
+          username: string
+        }
+        Update: {
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          username?: string
+        }
+        Relationships: []
+      }
       renovation_items: {
         Row: {
           budget: number
@@ -47,6 +71,7 @@ export type Database = {
           paid_value: number
           payment_method: string | null
           purchase_date: string | null
+          renovation_id: string | null
           status: string
           supplier: string
           supplier_id: string | null
@@ -65,6 +90,7 @@ export type Database = {
           paid_value?: number
           payment_method?: string | null
           purchase_date?: string | null
+          renovation_id?: string | null
           status?: string
           supplier: string
           supplier_id?: string | null
@@ -83,6 +109,7 @@ export type Database = {
           paid_value?: number
           payment_method?: string | null
           purchase_date?: string | null
+          renovation_id?: string | null
           status?: string
           supplier?: string
           supplier_id?: string | null
@@ -97,6 +124,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "renovation_items_renovation_id_fkey"
+            columns: ["renovation_id"]
+            isOneToOne: false
+            referencedRelation: "renovations"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "renovation_items_supplier_id_fkey"
             columns: ["supplier_id"]
             isOneToOne: false
@@ -104,6 +138,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      renovations: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          start_date: string | null
+          status: string
+          target_completion_date: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          start_date?: string | null
+          status?: string
+          target_completion_date?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          start_date?: string | null
+          status?: string
+          target_completion_date?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       suppliers: {
         Row: {

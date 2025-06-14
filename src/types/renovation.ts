@@ -18,8 +18,21 @@ export interface Supplier {
   updated_at: string;
 }
 
+export interface Renovation {
+  id: string;
+  user_id: string;
+  name: string;
+  description?: string;
+  start_date?: string;
+  target_completion_date?: string;
+  status: 'Planejamento' | 'Em Andamento' | 'Concluído' | 'Pausado' | 'Cancelado';
+  created_at: string;
+  updated_at: string;
+}
+
 export interface RenovationItem {
   id: string;
+  renovation_id: string;
   itemNumber: string;
   category?: string; // Keep for backward compatibility
   categoryId?: string;
@@ -41,6 +54,7 @@ export interface RenovationItem {
 }
 
 export interface RenovationFormData {
+  renovation_id: string;
   itemNumber: string;
   categoryId: string;
   supplierId: string;
@@ -65,4 +79,12 @@ export interface SupplierFormData {
   phone?: string;
   email?: string;
   address?: string;
+}
+
+export interface RenovationCreateData {
+  name: string;
+  description?: string;
+  start_date?: string;
+  target_completion_date?: string;
+  status?: 'Planejamento' | 'Em Andamento' | 'Concluído' | 'Pausado' | 'Cancelado';
 }

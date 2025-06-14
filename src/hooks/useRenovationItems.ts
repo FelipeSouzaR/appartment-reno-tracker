@@ -1,14 +1,19 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { RenovationItem, RenovationFormData } from '@/types/renovation';
 import { toast } from '@/hooks/use-toast';
 
-export const useRenovationItems = () => {
+export const useRenovationItems = (renovationId?: string) => {
   const [items, setItems] = useState<RenovationItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchItems = async () => {
+    if (!renovationId) {
+      setItems([]);
+      setLoading(false);
+      return;
+    }
+
     try {
       const { data, error } = await supabase
         .from('renovation_items')
@@ -17,12 +22,14 @@ export const useRenovationItems = () => {
           category_data:categories(id, name, description, created_at, updated_at),
           supplier_data:suppliers(id, name, contact_info, phone, email, address, created_at, updated_at)
         `)
+        .eq('renovation_id', renovationId)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
       
       const transformedData: RenovationItem[] = (data || []).map(item => ({
         id: item.id,
+        renovation_id: item.renovation_id,
         itemNumber: item.item_number,
         category: item.category || '', // Legacy field
         categoryId: item.category_id || '',
@@ -75,6 +82,7 @@ export const useRenovationItems = () => {
       const { data, error } = await supabase
         .from('renovation_items')
         .insert({
+          renovation_id: formData.renovation_id,
           item_number: formData.itemNumber,
           category_id: formData.categoryId,
           supplier_id: formData.supplierId,
@@ -101,6 +109,7 @@ export const useRenovationItems = () => {
       
       const transformedItem: RenovationItem = {
         id: data.id,
+        renovation_id: data.renovation_id,
         itemNumber: data.item_number,
         category: data.category || '',
         categoryId: data.category_id || '',
@@ -157,6 +166,7 @@ export const useRenovationItems = () => {
       const { data, error } = await supabase
         .from('renovation_items')
         .update({
+          renovation_id: formData.renovation_id,
           item_number: formData.itemNumber,
           category_id: formData.categoryId,
           supplier_id: formData.supplierId,
@@ -182,6 +192,7 @@ export const useRenovationItems = () => {
 
       const transformedItem: RenovationItem = {
         id: data.id,
+        renovation_id: data.renovation_id,
         itemNumber: data.item_number,
         category: data.category || '',
         categoryId: data.category_id || '',
@@ -260,7 +271,7 @@ export const useRenovationItems = () => {
 
   useEffect(() => {
     fetchItems();
-  }, []);
+  }, [renovationId]);
 
   return {
     items,

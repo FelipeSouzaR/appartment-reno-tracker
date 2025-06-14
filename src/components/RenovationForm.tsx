@@ -22,6 +22,7 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
   const { suppliers, loading: suppliersLoading } = useSuppliers();
   
   const [formData, setFormData] = React.useState<RenovationFormData>({
+    renovation_id: item?.renovation_id || '',
     itemNumber: item?.itemNumber || '',
     categoryId: item?.categoryId || '',
     supplierId: item?.supplierId || '',
@@ -88,7 +89,7 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
                 </SelectTrigger>
                 <SelectContent>
                   {categoriesLoading ? (
-                    <SelectItem value="loading" disabled>Carregando...</SelectItem>
+                    <SelectItem value="loading">Carregando...</SelectItem>
                   ) : (
                     categories.map((category) => (
                       <SelectItem key={category.id} value={category.id}>
@@ -122,7 +123,7 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
                 </SelectTrigger>
                 <SelectContent>
                   {suppliersLoading ? (
-                    <SelectItem value="loading" disabled>Carregando...</SelectItem>
+                    <SelectItem value="loading">Carregando...</SelectItem>
                   ) : (
                     suppliers.map((supplier) => (
                       <SelectItem key={supplier.id} value={supplier.id}>

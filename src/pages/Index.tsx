@@ -1,113 +1,152 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useNavigate } from "react-router-dom";
-import { Home, Calculator, ClipboardList, FileText } from "lucide-react";
+
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Building2, Users, BarChart3, Settings, LogIn } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
+  const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
 
+  const handleNavigation = (path: string) => {
+    if (!user && path !== '/auth') {
+      navigate('/auth');
+      return;
+    }
+    navigate(path);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
-      <div className="container mx-auto px-4 py-16">
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-foreground mb-4">
-            Bem-vindo ao Seu Hub de Projetos
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Gerencie seu projeto de reforma do apartamento com ferramentas profissionais 
-            para acompanhar, orçar e organizar cada detalhe.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-2 hover:border-primary/20">
-            <CardHeader className="text-center">
-              <div className="mx-auto mb-4 p-3 bg-primary/10 rounded-full w-fit group-hover:bg-primary/20 transition-colors">
-                <Home className="h-8 w-8 text-primary" />
-              </div>
-              <CardTitle className="text-2xl">Gerenciador de Reforma</CardTitle>
-              <CardDescription className="text-base">
-                Sistema CRUD completo para acompanhar itens da reforma do seu apartamento, 
-                orçamento e progresso
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="text-center space-y-2">
-              <Button 
-                onClick={() => navigate('/renovation')}
-                className="w-full"
-                size="lg"
-              >
-                Começar a Gerenciar
-              </Button>
-              <Button 
-                onClick={() => navigate('/renovation?tab=reports')}
-                variant="outline"
-                className="w-full"
-                size="sm"
-              >
-                <FileText className="h-4 w-4 mr-2" />
-                Ver Relatórios
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="group hover:shadow-lg transition-all duration-300 border-2 hover:border-primary/20">
-            <CardHeader className="text-center">
-              <div className="mx-auto mb-4 p-3 bg-secondary/20 rounded-full w-fit">
-                <Calculator className="h-8 w-8 text-secondary-foreground" />
-              </div>
-              <CardTitle className="text-2xl">Calculadora de Orçamento</CardTitle>
-              <CardDescription className="text-base">
-                Cálculos avançados de orçamento e controle financeiro para seu projeto de reforma
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="text-center">
-              <Button variant="outline" className="w-full" size="lg" disabled>
-                Em Breve
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="group hover:shadow-lg transition-all duration-300 border-2 hover:border-primary/20">
-            <CardHeader className="text-center">
-              <div className="mx-auto mb-4 p-3 bg-accent/30 rounded-full w-fit">
-                <ClipboardList className="h-8 w-8 text-accent-foreground" />
-              </div>
-              <CardTitle className="text-2xl">Relatórios de Progresso</CardTitle>
-              <CardDescription className="text-base">
-                Gere relatórios detalhados e visualizações do progresso da sua reforma
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="text-center">
-              <Button variant="outline" className="w-full" size="lg" disabled>
-                Em Breve
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="mt-16 text-center">
-          <div className="bg-card border rounded-lg p-8 max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold mb-4">Funcionalidades</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
-              <div className="space-y-2">
-                <h3 className="font-semibold text-lg">✓ Gerenciamento Completo de Itens</h3>
-                <p className="text-muted-foreground">Adicione, edite, exclua itens de reforma com detalhes completos</p>
-              </div>
-              <div className="space-y-2">
-                <h3 className="font-semibold text-lg">✓ Controle de Orçamento</h3>
-                <p className="text-muted-foreground">Acompanhe orçamento vs custos reais em Real Brasileiro (BRL)</p>
-              </div>
-              <div className="space-y-2">
-                <h3 className="font-semibold text-lg">✓ Gerenciamento de Status</h3>
-                <p className="text-muted-foreground">Monitore o progresso com indicadores visuais de status</p>
-              </div>
-              <div className="space-y-2">
-                <h3 className="font-semibold text-lg">✓ Relatórios e Análises</h3>
-                <p className="text-muted-foreground">Visualize relatórios detalhados com gráficos e estatísticas</p>
-              </div>
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+              Gerenciador de Reformas
+            </h1>
+            <p className="text-lg text-gray-600">
+              Organize e acompanhe suas reformas com facilidade
+            </p>
           </div>
+          <div className="flex items-center space-x-4">
+            {user ? (
+              <>
+                <span className="text-sm text-gray-600">
+                  Olá, {profile?.username || user.email}
+                </span>
+                <Button variant="outline" onClick={signOut}>
+                  Sair
+                </Button>
+              </>
+            ) : (
+              <Button onClick={() => navigate('/auth')} className="flex items-center space-x-2">
+                <LogIn className="h-4 w-4" />
+                <span>Entrar</span>
+              </Button>
+            )}
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle className="text-2xl">Bem-vindo ao Gerenciador de Reformas</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-6">
+                Uma ferramenta completa para gerenciar suas reformas, controlar orçamentos, 
+                acompanhar fornecedores e manter tudo organizado em um só lugar.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center space-x-3">
+                  <Building2 className="h-8 w-8 text-blue-600" />
+                  <div>
+                    <h3 className="font-semibold">Múltiplas Reformas</h3>
+                    <p className="text-sm text-gray-600">Gerencie várias reformas simultaneamente</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Users className="h-8 w-8 text-green-600" />
+                  <div>
+                    <h3 className="font-semibold">Controle de Usuários</h3>
+                    <p className="text-sm text-gray-600">Cada usuário tem suas próprias reformas</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <BarChart3 className="h-8 w-8 text-purple-600" />
+                  <div>
+                    <h3 className="font-semibold">Relatórios Detalhados</h3>
+                    <p className="text-sm text-gray-600">Acompanhe gastos e progresso</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Settings className="h-8 w-8 text-orange-600" />
+                  <div>
+                    <h3 className="font-semibold">Configuração Flexível</h3>
+                    <p className="text-sm text-gray-600">Categorias e fornecedores personalizados</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Action Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleNavigation('/renovation')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Building2 className="h-6 w-6 text-blue-600" />
+                <span>Minhas Reformas</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">
+                Acesse suas reformas, adicione itens e acompanhe o progresso
+              </p>
+              <Button className="w-full">
+                {user ? 'Ir para Reformas' : 'Fazer Login'}
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleNavigation('/configuration')}>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Settings className="h-6 w-6 text-green-600" />
+                <span>Configurações</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">
+                Configure categorias, fornecedores e outras preferências
+              </p>
+              <Button variant="outline" className="w-full">
+                {user ? 'Configurar' : 'Fazer Login'}
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <BarChart3 className="h-6 w-6 text-purple-600" />
+                <span>Relatórios</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">
+                Visualize relatórios detalhados dos seus gastos e progresso
+              </p>
+              <Button variant="outline" className="w-full">
+                Em Breve
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
