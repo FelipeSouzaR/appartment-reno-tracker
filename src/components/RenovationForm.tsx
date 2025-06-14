@@ -35,6 +35,13 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
     observations: item?.observations || '',
   });
 
+  // Valores de display para os campos numéricos (strings vazias quando não há valor)
+  const [displayValues, setDisplayValues] = React.useState({
+    budget: item?.budget ? item.budget.toString() : '',
+    estimatedPrice: item?.estimatedPrice ? item.estimatedPrice.toString() : '',
+    paidValue: item?.paidValue ? item.paidValue.toString() : '',
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
@@ -42,6 +49,15 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
 
   const handleInputChange = (field: keyof RenovationFormData, value: string | number) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleNumericInputChange = (field: 'budget' | 'estimatedPrice' | 'paidValue', value: string) => {
+    // Atualiza o valor de display
+    setDisplayValues(prev => ({ ...prev, [field]: value }));
+    
+    // Converte para número ou mantém 0 se vazio
+    const numericValue = value === '' ? 0 : parseFloat(value) || 0;
+    setFormData(prev => ({ ...prev, [field]: numericValue }));
   };
 
   return (
@@ -135,8 +151,8 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
                 id="budget"
                 type="number"
                 step="0.01"
-                value={formData.budget}
-                onChange={(e) => handleInputChange('budget', parseFloat(e.target.value) || 0)}
+                value={displayValues.budget}
+                onChange={(e) => handleNumericInputChange('budget', e.target.value)}
                 placeholder="0,00"
                 required
               />
@@ -147,8 +163,8 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
                 id="estimatedPrice"
                 type="number"
                 step="0.01"
-                value={formData.estimatedPrice}
-                onChange={(e) => handleInputChange('estimatedPrice', parseFloat(e.target.value) || 0)}
+                value={displayValues.estimatedPrice}
+                onChange={(e) => handleNumericInputChange('estimatedPrice', e.target.value)}
                 placeholder="0,00"
                 required
               />
@@ -159,8 +175,8 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
                 id="paidValue"
                 type="number"
                 step="0.01"
-                value={formData.paidValue}
-                onChange={(e) => handleInputChange('paidValue', parseFloat(e.target.value) || 0)}
+                value={displayValues.paidValue}
+                onChange={(e) => handleNumericInputChange('paidValue', e.target.value)}
                 placeholder="0,00"
               />
             </div>
