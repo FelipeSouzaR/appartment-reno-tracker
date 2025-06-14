@@ -3,6 +3,8 @@ import { useState, useCallback, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { useOptimizedCallbacks } from '@/hooks/useOptimizedRender';
+import { useErrorHandling } from '@/hooks/useErrorHandling';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 interface UseEntityCRUDOptions<T> {
   tableName: string;
@@ -17,10 +19,12 @@ export const useEntityCRUD = <T extends { id: string }, TFormData = any>(
 ) => {
   const [entities, setEntities] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
+  const { handleError } = useErrorHandling();
   const { tableName, entityName, orderBy, select = '*', transform } = options;
 
   const fetchEntities = useCallback(async () => {
     try {
+      setLoading(true);
       let query = supabase.from(tableName as any).select(select);
       
       if (orderBy) {
@@ -36,16 +40,12 @@ export const useEntityCRUD = <T extends { id: string }, TFormData = any>(
       
       setEntities(transformedData);
     } catch (error) {
+      handleError(error, `fetch-${entityName}s`);
       console.error(`Error fetching ${entityName}s:`, error);
-      toast({
-        title: "Erro",
-        description: `Erro ao carregar ${entityName}s.`,
-        variant: "destructive",
-      });
     } finally {
       setLoading(false);
     }
-  }, [tableName, entityName, orderBy, select, transform]);
+  }, [tableName, entityName, orderBy, select, transform, handleError]);
 
   const createEntity = useCallback(async (formData: TFormData) => {
     try {
@@ -66,15 +66,16 @@ export const useEntityCRUD = <T extends { id: string }, TFormData = any>(
       });
       return transformedData;
     } catch (error) {
-      console.error(`Error creating ${entityName}:`, error);
+      const errorMessage = getErrorMessage(error);
+      handleError(error, `create-${entityName}`, false);
       toast({
         title: "Erro",
-        description: `Erro ao criar ${entityName}.`,
+        description: `Erro ao criar ${entityName}: ${errorMessage}`,
         variant: "destructive",
       });
       throw error;
     }
-  }, [tableName, entityName, select, transform]);
+  }, [tableName, entityName, select, transform, handleError]);
 
   const updateEntity = useCallback(async (id: string, formData: Partial<TFormData>) => {
     try {
@@ -98,15 +99,16 @@ export const useEntityCRUD = <T extends { id: string }, TFormData = any>(
       });
       return transformedData;
     } catch (error) {
-      console.error(`Error updating ${entityName}:`, error);
+      const errorMessage = getErrorMessage(error);
+      handleError(error, `update-${entityName}`, false);
       toast({
         title: "Erro",
-        description: `Erro ao atualizar ${entityName}.`,
+        description: `Erro ao atualizar ${entityName}: ${errorMessage}`,
         variant: "destructive",
       });
       throw error;
     }
-  }, [tableName, entityName, select, transform]);
+  }, [tableName, entityName, select, transform, handleError]);
 
   const deleteEntity = useCallback(async (id: string) => {
     try {
@@ -123,15 +125,16 @@ export const useEntityCRUD = <T extends { id: string }, TFormData = any>(
         description: `${entityName} excluído com sucesso.`,
       });
     } catch (error) {
-      console.error(`Error deleting ${entityName}:`, error);
+      const errorMessage = getErrorMessage(error);
+      handleError(error, `delete-${entityName}`, false);
       toast({
         title: "Erro",
-        description: `Erro ao excluir ${entityName}.`,
+        description: `Erro ao excluir ${entityName}: ${errorMessage}`,
         variant: "destructive",
       });
       throw error;
     }
-  }, [tableName, entityName]);
+  }, [tableName, entityName, handleError]);
 
   // Optimize callbacks for better performance
   const optimizedCallbacks = useOptimizedCallbacks({
