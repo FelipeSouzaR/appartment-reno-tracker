@@ -1,11 +1,14 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import SelectFormField from '@/components/form/SelectFormField';
+import QuickAddCategoryDialog from '@/components/form/QuickAddCategoryDialog';
+import QuickAddSupplierDialog from '@/components/form/QuickAddSupplierDialog';
 import { RenovationFormData } from '@/types/renovation';
 import { useCategories } from '@/hooks/useCategories';
+import { useSuppliers } from '@/hooks/useSuppliers';
 
 interface BasicInfoSectionProps {
   formData: RenovationFormData;
@@ -16,12 +19,30 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
   formData,
   onInputChange
 }) => {
-  const { categories, loading: categoriesLoading } = useCategories();
+  const { categories, loading: categoriesLoading, refreshCategories } = useCategories();
+  const { suppliers, loading: suppliersLoading, refreshSuppliers } = useSuppliers();
+  const [showCategoryDialog, setShowCategoryDialog] = useState(false);
+  const [showSupplierDialog, setShowSupplierDialog] = useState(false);
 
   const categoryOptions = categories.map(category => ({
     value: category.id,
     label: category.name
   }));
+
+  const supplierOptions = suppliers.map(supplier => ({
+    value: supplier.id,
+    label: supplier.name
+  }));
+
+  const handleCategoryCreated = async (categoryId: string) => {
+    await refreshCategories();
+    onInputChange('categoryId', categoryId);
+  };
+
+  const handleSupplierCreated = async (supplierId: string) => {
+    await refreshSuppliers();
+    onInputChange('supplierId', supplierId);
+  };
 
   return (
     <>
@@ -44,6 +65,22 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
           placeholder="Selecione uma categoria"
           options={categoryOptions}
           loading={categoriesLoading}
+          showQuickAdd={true}
+          onQuickAdd={() => setShowCategoryDialog(true)}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4">
+        <SelectFormField
+          id="supplierId"
+          label="Fornecedor"
+          value={formData.supplierId}
+          onChange={(value) => onInputChange('supplierId', value)}
+          placeholder="Selecione um fornecedor"
+          options={supplierOptions}
+          loading={suppliersLoading}
+          showQuickAdd={true}
+          onQuickAdd={() => setShowSupplierDialog(true)}
         />
       </div>
 
@@ -58,6 +95,18 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
           rows={3}
         />
       </div>
+
+      <QuickAddCategoryDialog
+        open={showCategoryDialog}
+        onOpenChange={setShowCategoryDialog}
+        onCategoryCreated={handleCategoryCreated}
+      />
+
+      <QuickAddSupplierDialog
+        open={showSupplierDialog}
+        onOpenChange={setShowSupplierDialog}
+        onSupplierCreated={handleSupplierCreated}
+      />
     </>
   );
 };
