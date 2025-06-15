@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { RenovationItem } from '@/types/renovation';
+import RenovationGanttChart from '@/components/RenovationGanttChart';
 
 interface RenovationReportsProps {
   items: RenovationItem[];
@@ -75,6 +76,9 @@ const RenovationReports: React.FC<RenovationReportsProps> = ({ items }) => {
           <CardTitle className="text-2xl font-bold">Relatórios da Reforma</CardTitle>
         </CardHeader>
       </Card>
+
+      {/* Gantt Chart */}
+      <RenovationGanttChart items={items} />
 
       {/* Resumo Financeiro */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
