@@ -59,8 +59,15 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
       return;
     }
     
-    console.log('Form data being submitted:', formData);
-    onSubmit(formData);
+    // Convert special placeholder values back to empty strings
+    const submissionData = {
+      ...formData,
+      categoryId: formData.categoryId === 'none' ? '' : formData.categoryId,
+      supplierId: formData.supplierId === 'none' ? '' : formData.supplierId,
+    };
+    
+    console.log('Form data being submitted:', submissionData);
+    onSubmit(submissionData);
   };
 
   const handleInputChange = (field: keyof RenovationFormData, value: string | number) => {
@@ -98,12 +105,12 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
             </div>
             <div className="space-y-2">
               <Label htmlFor="categoryId">Categoria</Label>
-              <Select value={formData.categoryId} onValueChange={(value) => handleInputChange('categoryId', value)}>
+              <Select value={formData.categoryId || 'none'} onValueChange={(value) => handleInputChange('categoryId', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione uma categoria" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Nenhuma categoria</SelectItem>
+                  <SelectItem value="none">Nenhuma categoria</SelectItem>
                   {categoriesLoading ? (
                     <SelectItem value="loading" disabled>Carregando...</SelectItem>
                   ) : (
@@ -133,12 +140,12 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="supplierId">Fornecedor</Label>
-              <Select value={formData.supplierId} onValueChange={(value) => handleInputChange('supplierId', value)}>
+              <Select value={formData.supplierId || 'none'} onValueChange={(value) => handleInputChange('supplierId', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione um fornecedor" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Nenhum fornecedor</SelectItem>
+                  <SelectItem value="none">Nenhum fornecedor</SelectItem>
                   {suppliersLoading ? (
                     <SelectItem value="loading" disabled>Carregando...</SelectItem>
                   ) : (
