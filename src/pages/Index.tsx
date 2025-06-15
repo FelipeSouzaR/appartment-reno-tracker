@@ -9,6 +9,7 @@ import FeaturesGrid from '@/components/home/FeaturesGrid';
 import AuthenticatedHeader from '@/components/home/AuthenticatedHeader';
 import WelcomeBackSection from '@/components/home/WelcomeBackSection';
 import ActionCards from '@/components/home/ActionCards';
+import AdContainer from '@/components/ads/AdContainer';
 
 const Index = () => {
   const { user, profile, signOut, loading } = useAuth();
@@ -35,8 +36,15 @@ const Index = () => {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="container mx-auto px-4 py-8">
           <UnauthenticatedHeader onAuthClick={handleAuthClick} />
+          
+          {/* Ad banner no topo */}
+          <AdContainer adType="leaderboard" position="top" className="mb-6" />
+          
           <WelcomeSection onAuthClick={handleAuthClick} />
           <FeaturesGrid />
+          
+          {/* Ad retângulo no final */}
+          <AdContainer adType="rectangle" position="bottom" className="mt-8" />
         </div>
       </div>
     );
@@ -47,8 +55,15 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="container mx-auto px-4 py-8">
         <AuthenticatedHeader user={user} profile={profile} onSignOut={signOut} />
+        
+        {/* Ad banner para usuários autenticados */}
+        <AdContainer adType="banner" position="top" className="mb-6" />
+        
         <WelcomeBackSection />
         <ActionCards onNavigate={handleNavigation} />
+        
+        {/* Ad retângulo no final */}
+        <AdContainer adType="rectangle" position="bottom" className="mt-8" />
       </div>
     </div>
   );

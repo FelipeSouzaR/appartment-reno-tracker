@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -12,6 +13,7 @@ import RenovationForm from '@/components/RenovationForm';
 import RenovationReports from '@/components/RenovationReports';
 import CategoryManagement from '@/components/CategoryManagement';
 import SupplierManagement from '@/components/SupplierManagement';
+import AdContainer from '@/components/ads/AdContainer';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const RenovationPage = () => {
@@ -102,6 +104,10 @@ const RenovationPage = () => {
             onNavigateHome={() => navigate('/')}
             onSignOut={handleSignOut}
           />
+          
+          {/* Ad banner no seletor de renovações */}
+          <AdContainer adType="leaderboard" position="top" className="mb-4" />
+          
           <RenovationSelector 
             onSelectRenovation={setSelectedRenovation}
             selectedRenovation={selectedRenovation}
@@ -135,7 +141,13 @@ const RenovationPage = () => {
     }
 
     if (showReports) {
-      return <RenovationReports items={items} />;
+      return (
+        <div className="space-y-6">
+          <RenovationReports items={items} />
+          {/* Ad no final dos relatórios */}
+          <AdContainer adType="rectangle" position="bottom" />
+        </div>
+      );
     }
 
     if (showCategories) {
@@ -146,7 +158,15 @@ const RenovationPage = () => {
       return <SupplierManagement />;
     }
 
-    return <RenovationTable items={items} onEdit={showEditForm} onDelete={handleDeleteItem} />;
+    return (
+      <div className="space-y-4">
+        <RenovationTable items={items} onEdit={showEditForm} onDelete={handleDeleteItem} />
+        {/* Ad banner após a tabela se houver muitos itens */}
+        {items.length > 5 && (
+          <AdContainer adType="banner" position="bottom" className="mt-4" />
+        )}
+      </div>
+    );
   };
 
   return (
@@ -166,6 +186,9 @@ const RenovationPage = () => {
           onAddItem={handleAddItem}
           onBackToTable={resetViews}
         />
+
+        {/* Ad banner no topo da página de renovação */}
+        <AdContainer adType="banner" position="top" className="mb-4" />
 
         {renderContent()}
       </div>
