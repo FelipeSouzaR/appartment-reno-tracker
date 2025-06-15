@@ -8,7 +8,7 @@ interface WebAdProps {
 }
 
 const WebAd: React.FC<WebAdProps> = ({ adType, position, className = '' }) => {
-  const adRef = useRef<HTMLDivElement>(null);
+  const adRef = useRef<HTMLElement>(null);
 
   const getAdSize = () => {
     switch (adType) {
@@ -61,8 +61,8 @@ const WebAd: React.FC<WebAdProps> = ({ adType, position, className = '' }) => {
           width: `${width}px`,
           height: `${height}px`
         }}
-        data-ad-client="ca-pub-XXXXXXXXXX" // Substituir pelo seu Publisher ID
-        data-ad-slot="XXXXXXXXXX" // Substituir pelo seu Ad Slot ID
+        data-ad-client="ca-pub-XXXXXXXXXX"
+        data-ad-slot="XXXXXXXXXX"
         data-ad-format="auto"
         data-full-width-responsive="true"
       />
