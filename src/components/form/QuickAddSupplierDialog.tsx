@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,7 +23,7 @@ const QuickAddSupplierDialog: React.FC<QuickAddSupplierDialogProps> = ({
   onOpenChange,
   onSupplierCreated
 }) => {
-  const { createSupplier } = useSuppliers();
+  const { createSupplier, isCreating } = useSuppliers();
   const [formData, setFormData] = useState<SupplierFormData>({
     name: '',
     phone: '',
@@ -30,14 +31,12 @@ const QuickAddSupplierDialog: React.FC<QuickAddSupplierDialogProps> = ({
     contact_info: '',
     address: ''
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSave = async () => {
     if (!formData.name.trim()) {
       return;
     }
 
-    setIsSubmitting(true);
     try {
       const newSupplier = await createSupplier(formData);
       onSupplierCreated(newSupplier.id);
@@ -51,8 +50,6 @@ const QuickAddSupplierDialog: React.FC<QuickAddSupplierDialogProps> = ({
       onOpenChange(false);
     } catch (error) {
       // Error is handled in the hook
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -110,8 +107,8 @@ const QuickAddSupplierDialog: React.FC<QuickAddSupplierDialogProps> = ({
             <Button type="button" variant="outline" onClick={handleCancel}>
               Cancelar
             </Button>
-            <Button type="button" onClick={handleSave} disabled={isSubmitting || !formData.name.trim()}>
-              {isSubmitting ? 'Criando...' : 'Criar Fornecedor'}
+            <Button type="button" onClick={handleSave} disabled={isCreating || !formData.name.trim()}>
+              {isCreating ? 'Criando...' : 'Criar Fornecedor'}
             </Button>
           </div>
         </div>

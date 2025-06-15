@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -20,7 +19,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
   onInputChange
 }) => {
   const { categories, loading: categoriesLoading, refreshCategories } = useCategories();
-  const { suppliers, loading: suppliersLoading, refreshSuppliers } = useSuppliers();
+  const { suppliers, loading: suppliersLoading } = useSuppliers();
   const [showCategoryDialog, setShowCategoryDialog] = useState(false);
   const [showSupplierDialog, setShowSupplierDialog] = useState(false);
 
@@ -39,8 +38,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
     onInputChange('categoryId', categoryId);
   };
 
-  const handleSupplierCreated = async (supplierId: string) => {
-    await refreshSuppliers();
+  const handleSupplierCreated = (supplierId: string) => {
     onInputChange('supplierId', supplierId);
   };
 
