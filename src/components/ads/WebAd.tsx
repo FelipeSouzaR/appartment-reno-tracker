@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 
 interface WebAdProps {
@@ -8,7 +7,7 @@ interface WebAdProps {
 }
 
 const WebAd: React.FC<WebAdProps> = ({ adType, position, className = '' }) => {
-  const adRef = useRef<HTMLElement>(null);
+  const adRef = useRef<HTMLModElement>(null);
 
   const getAdSize = () => {
     switch (adType) {
