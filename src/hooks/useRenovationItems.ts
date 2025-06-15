@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { RenovationItem, RenovationFormData } from '@/types/renovation';
 import { toast } from '@/hooks/use-toast';
+import { getErrorMessage, logError } from '@/utils/errorUtils';
 
 export const useRenovationItems = (renovationId?: string) => {
   const [items, setItems] = useState<RenovationItem[]>([]);
@@ -66,10 +67,11 @@ export const useRenovationItems = (renovationId?: string) => {
 
       setItems(transformedData);
     } catch (error) {
+      logError(error, 'fetch-renovation-items');
       console.error('Error fetching renovation items:', error);
       toast({
         title: "Erro",
-        description: "Erro ao carregar itens de reforma.",
+        description: getErrorMessage(error),
         variant: "destructive",
       });
     } finally {
@@ -79,25 +81,45 @@ export const useRenovationItems = (renovationId?: string) => {
 
   const createItem = async (formData: RenovationFormData) => {
     try {
+      console.log('Creating item with data:', formData);
+      
+      // Validate required fields
+      if (!formData.renovation_id) {
+        throw new Error('ID da reforma é obrigatório');
+      }
+      
+      if (!formData.itemNumber) {
+        throw new Error('Número do item é obrigatório');
+      }
+      
+      if (!formData.description) {
+        throw new Error('Descrição é obrigatória');
+      }
+
+      // Prepare the data for insertion
+      const insertData = {
+        renovation_id: formData.renovation_id,
+        item_number: formData.itemNumber,
+        category_id: formData.categoryId || null,
+        supplier_id: formData.supplierId || null,
+        description: formData.description,
+        budget: Number(formData.budget) || 0,
+        estimated_price: Number(formData.estimatedPrice) || 0,
+        purchase_date: formData.purchaseDate || null,
+        paid_value: Number(formData.paidValue) || 0,
+        status: formData.status || 'Pendente',
+        payment_method: formData.paymentMethod || null,
+        observations: formData.observations || null,
+        // Keep legacy fields for compatibility
+        category: '',
+        supplier: '',
+      };
+
+      console.log('Insert data:', insertData);
+
       const { data, error } = await supabase
         .from('renovation_items')
-        .insert({
-          renovation_id: formData.renovation_id,
-          item_number: formData.itemNumber,
-          category_id: formData.categoryId,
-          supplier_id: formData.supplierId,
-          description: formData.description,
-          budget: formData.budget,
-          estimated_price: formData.estimatedPrice,
-          purchase_date: formData.purchaseDate || null,
-          paid_value: formData.paidValue,
-          status: formData.status,
-          payment_method: formData.paymentMethod || null,
-          observations: formData.observations || null,
-          // Keep legacy fields for now
-          category: '',
-          supplier: '',
-        })
+        .insert(insertData)
         .select(`
           *,
           category_data:categories(id, name, description, created_at, updated_at),
@@ -105,7 +127,10 @@ export const useRenovationItems = (renovationId?: string) => {
         `)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
       
       const transformedItem: RenovationItem = {
         id: data.id,
@@ -151,10 +176,12 @@ export const useRenovationItems = (renovationId?: string) => {
       });
       return transformedItem;
     } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      logError(error, 'create-renovation-item');
       console.error('Error creating renovation item:', error);
       toast({
         title: "Erro",
-        description: "Erro ao criar item de reforma.",
+        description: `Erro ao criar item de reforma: ${errorMessage}`,
         variant: "destructive",
       });
       throw error;
@@ -168,8 +195,8 @@ export const useRenovationItems = (renovationId?: string) => {
         .update({
           renovation_id: formData.renovation_id,
           item_number: formData.itemNumber,
-          category_id: formData.categoryId,
-          supplier_id: formData.supplierId,
+          category_id: formData.categoryId || null,
+          supplier_id: formData.supplierId || null,
           description: formData.description,
           budget: formData.budget,
           estimated_price: formData.estimatedPrice,
@@ -234,10 +261,12 @@ export const useRenovationItems = (renovationId?: string) => {
       });
       return transformedItem;
     } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      logError(error, 'update-renovation-item');
       console.error('Error updating renovation item:', error);
       toast({
         title: "Erro",
-        description: "Erro ao atualizar item de reforma.",
+        description: `Erro ao atualizar item de reforma: ${errorMessage}`,
         variant: "destructive",
       });
       throw error;
@@ -259,10 +288,12 @@ export const useRenovationItems = (renovationId?: string) => {
         description: "Item de reforma excluído com sucesso.",
       });
     } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      logError(error, 'delete-renovation-item');
       console.error('Error deleting renovation item:', error);
       toast({
         title: "Erro",
-        description: "Erro ao excluir item de reforma.",
+        description: `Erro ao excluir item de reforma: ${errorMessage}`,
         variant: "destructive",
       });
       throw error;

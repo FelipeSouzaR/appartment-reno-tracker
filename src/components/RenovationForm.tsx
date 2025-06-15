@@ -45,6 +45,19 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Basic validation
+    if (!formData.itemNumber.trim()) {
+      alert('Número do item é obrigatório');
+      return;
+    }
+    
+    if (!formData.description.trim()) {
+      alert('Descrição é obrigatória');
+      return;
+    }
+    
+    console.log('Form data being submitted:', formData);
     onSubmit(formData);
   };
 
@@ -72,7 +85,7 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="itemNumber">Número do Item</Label>
+              <Label htmlFor="itemNumber">Número do Item *</Label>
               <Input
                 id="itemNumber"
                 value={formData.itemNumber}
@@ -88,8 +101,9 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
                   <SelectValue placeholder="Selecione uma categoria" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="">Nenhuma categoria</SelectItem>
                   {categoriesLoading ? (
-                    <SelectItem value="loading">Carregando...</SelectItem>
+                    <SelectItem value="loading" disabled>Carregando...</SelectItem>
                   ) : (
                     categories.map((category) => (
                       <SelectItem key={category.id} value={category.id}>
@@ -103,7 +117,7 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Descrição do Item</Label>
+            <Label htmlFor="description">Descrição do Item *</Label>
             <Textarea
               id="description"
               value={formData.description}
@@ -122,8 +136,9 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
                   <SelectValue placeholder="Selecione um fornecedor" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="">Nenhum fornecedor</SelectItem>
                   {suppliersLoading ? (
-                    <SelectItem value="loading">Carregando...</SelectItem>
+                    <SelectItem value="loading" disabled>Carregando...</SelectItem>
                   ) : (
                     suppliers.map((supplier) => (
                       <SelectItem key={supplier.id} value={supplier.id}>
@@ -152,10 +167,10 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
                 id="budget"
                 type="number"
                 step="0.01"
+                min="0"
                 value={displayValues.budget}
                 onChange={(e) => handleNumericInputChange('budget', e.target.value)}
                 placeholder="0,00"
-                required
               />
             </div>
             <div className="space-y-2">
@@ -164,10 +179,10 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
                 id="estimatedPrice"
                 type="number"
                 step="0.01"
+                min="0"
                 value={displayValues.estimatedPrice}
                 onChange={(e) => handleNumericInputChange('estimatedPrice', e.target.value)}
                 placeholder="0,00"
-                required
               />
             </div>
             <div className="space-y-2">
@@ -176,6 +191,7 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
                 id="paidValue"
                 type="number"
                 step="0.01"
+                min="0"
                 value={displayValues.paidValue}
                 onChange={(e) => handleNumericInputChange('paidValue', e.target.value)}
                 placeholder="0,00"
