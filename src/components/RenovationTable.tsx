@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -102,6 +103,7 @@ const RenovationTable: React.FC<RenovationTableProps> = ({ items, onEdit, onDele
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="whitespace-nowrap">Ações</TableHead>
                   <TableHead className="whitespace-nowrap">Item#</TableHead>
                   <TableHead className="whitespace-nowrap">Categoria</TableHead>
                   <TableHead className="whitespace-nowrap">Descrição</TableHead>
@@ -113,25 +115,11 @@ const RenovationTable: React.FC<RenovationTableProps> = ({ items, onEdit, onDele
                   <TableHead className="whitespace-nowrap">Executada</TableHead>
                   <TableHead className="whitespace-nowrap">Compra</TableHead>
                   <TableHead className="whitespace-nowrap">Status</TableHead>
-                  <TableHead className="whitespace-nowrap">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {items.map((item) => (
                   <TableRow key={item.id}>
-                    <TableCell className="font-mono text-sm whitespace-nowrap">{item.itemNumber}</TableCell>
-                    <TableCell className="whitespace-nowrap">{item.category_data?.name || item.category || '-'}</TableCell>
-                    <TableCell className="max-w-xs truncate" title={item.description}>
-                      {item.description}
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap">{item.supplier_data?.name || item.supplier || '-'}</TableCell>
-                    <TableCell className="text-right whitespace-nowrap">{formatCurrency(item.budget)}</TableCell>
-                    <TableCell className="text-right whitespace-nowrap">{formatCurrency(item.estimatedPrice)}</TableCell>
-                    <TableCell className="text-right whitespace-nowrap">{formatCurrency(item.paidValue)}</TableCell>
-                    <TableCell className="whitespace-nowrap">{formatDate(item.plannedDate)}</TableCell>
-                    <TableCell className="whitespace-nowrap">{formatDate(item.executedDate)}</TableCell>
-                    <TableCell className="whitespace-nowrap">{formatDate(item.purchaseDate)}</TableCell>
-                    <TableCell className="whitespace-nowrap">{getStatusBadge(item.status)}</TableCell>
                     <TableCell className="whitespace-nowrap">
                       <div className="flex space-x-2">
                         <Button
@@ -152,6 +140,19 @@ const RenovationTable: React.FC<RenovationTableProps> = ({ items, onEdit, onDele
                         </Button>
                       </div>
                     </TableCell>
+                    <TableCell className="font-mono text-sm whitespace-nowrap">{item.itemNumber}</TableCell>
+                    <TableCell className="whitespace-nowrap">{item.category_data?.name || item.category || '-'}</TableCell>
+                    <TableCell className="max-w-xs truncate" title={item.description}>
+                      {item.description}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">{item.supplier_data?.name || item.supplier || '-'}</TableCell>
+                    <TableCell className="text-right whitespace-nowrap">{formatCurrency(item.budget)}</TableCell>
+                    <TableCell className="text-right whitespace-nowrap">{formatCurrency(item.estimatedPrice)}</TableCell>
+                    <TableCell className="text-right whitespace-nowrap">{formatCurrency(item.paidValue)}</TableCell>
+                    <TableCell className="whitespace-nowrap">{formatDate(item.plannedDate)}</TableCell>
+                    <TableCell className="whitespace-nowrap">{formatDate(item.executedDate)}</TableCell>
+                    <TableCell className="whitespace-nowrap">{formatDate(item.purchaseDate)}</TableCell>
+                    <TableCell className="whitespace-nowrap">{getStatusBadge(item.status)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

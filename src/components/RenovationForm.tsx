@@ -15,9 +15,10 @@ interface RenovationFormProps {
   onSubmit: (data: RenovationFormData) => void;
   onCancel: () => void;
   isEditing: boolean;
+  newItemNumber?: string;
 }
 
-const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCancel, isEditing }) => {
+const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCancel, isEditing, newItemNumber }) => {
   const {
     formData,
     displayValues,
@@ -25,7 +26,7 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
     handleInputChange,
     handleNumericInputChange,
     handleDurationInputChange,
-  } = useRenovationForm({ item, onSubmit, onCancel, isEditing });
+  } = useRenovationForm({ item, onSubmit, onCancel, isEditing, newItemNumber });
 
   return (
     <Card className="w-full max-w-4xl mx-auto">

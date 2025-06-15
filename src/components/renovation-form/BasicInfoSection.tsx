@@ -27,13 +27,13 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="itemNumber">Número do Item *</Label>
+          <Label htmlFor="itemNumber">Número do Item</Label>
           <Input
             id="itemNumber"
             value={formData.itemNumber}
-            onChange={(e) => onInputChange('itemNumber', e.target.value)}
-            placeholder="ex: 001"
-            required
+            readOnly
+            className="bg-muted"
+            placeholder="Será gerado automaticamente"
           />
         </div>
         <SelectFormField

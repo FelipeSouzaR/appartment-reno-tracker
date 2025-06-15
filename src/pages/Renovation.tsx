@@ -1,15 +1,18 @@
-
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useRenovationItems } from '@/hooks/useRenovationItems';
 import { useRenovationNavigation } from '@/hooks/useRenovationNavigation';
-import { Renovation } from '@/types/renovation';
+import { Renovation, RenovationItem } from '@/types/renovation';
 import RenovationSelector from '@/components/RenovationSelector';
 import RenovationSelectorHeader from '@/components/renovation/RenovationSelectorHeader';
 import RenovationHeader from '@/components/renovation/RenovationHeader';
-import RenovationContent from '@/components/renovation/RenovationContent';
+import RenovationTable from '@/components/RenovationTable';
+import RenovationForm from '@/components/RenovationForm';
+import RenovationReports from '@/components/RenovationReports';
+import CategoryManagement from '@/components/CategoryManagement';
+import SupplierManagement from '@/components/SupplierManagement';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const RenovationPage = () => {
   const { user, profile, signOut } = useAuth();
@@ -30,6 +33,7 @@ const RenovationPage = () => {
     showSuppliersView,
     showEditForm,
   } = useRenovationNavigation();
+  const [newItemNumber, setNewItemNumber] = useState('');
 
   // Redirect to auth if not logged in
   useEffect(() => {
@@ -44,6 +48,9 @@ const RenovationPage = () => {
 
   const handleAddItem = () => {
     if (!selectedRenovation) return;
+    const maxItemNumber = Math.max(0, ...items.map(i => parseInt(i.itemNumber, 10) || 0));
+    const nextItemNumber = (maxItemNumber + 1).toString().padStart(3, '0');
+    setNewItemNumber(nextItemNumber);
     showAddForm();
   };
 
@@ -104,6 +111,44 @@ const RenovationPage = () => {
     );
   }
 
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="space-y-4">
+          <Skeleton className="h-24 w-full" />
+          <Skeleton className="h-64 w-full" />
+        </div>
+      );
+    }
+
+    if (showForm) {
+      return (
+        <RenovationForm
+          key={editingItem ? editingItem.id : 'new'}
+          item={editingItem}
+          onSubmit={handleFormSubmit}
+          onCancel={handleFormCancel}
+          isEditing={!!editingItem}
+          newItemNumber={newItemNumber}
+        />
+      );
+    }
+
+    if (showReports) {
+      return <RenovationReports items={items} />;
+    }
+
+    if (showCategories) {
+      return <CategoryManagement />;
+    }
+    
+    if (showSuppliers) {
+      return <SupplierManagement />;
+    }
+
+    return <RenovationTable items={items} onEdit={showEditForm} onDelete={handleDeleteItem} />;
+  };
+
   return (
     <div className="min-h-screen bg-background p-4">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -122,19 +167,7 @@ const RenovationPage = () => {
           onBackToTable={resetViews}
         />
 
-        <RenovationContent
-          loading={loading}
-          showForm={showForm}
-          showReports={showReports}
-          showCategories={showCategories}
-          showSuppliers={showSuppliers}
-          items={items}
-          editingItem={editingItem}
-          onFormSubmit={handleFormSubmit}
-          onFormCancel={handleFormCancel}
-          onEditItem={showEditForm}
-          onDeleteItem={handleDeleteItem}
-        />
+        {renderContent()}
       </div>
     </div>
   );

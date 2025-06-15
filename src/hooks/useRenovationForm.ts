@@ -6,12 +6,13 @@ interface UseRenovationFormProps {
   onSubmit: (data: RenovationFormData) => void;
   onCancel: () => void;
   isEditing: boolean;
+  newItemNumber?: string;
 }
 
-export const useRenovationForm = ({ item, onSubmit, onCancel, isEditing }: UseRenovationFormProps) => {
+export const useRenovationForm = ({ item, onSubmit, onCancel, isEditing, newItemNumber }: UseRenovationFormProps) => {
   const [formData, setFormData] = useState<RenovationFormData>({
     renovation_id: item?.renovation_id || '',
-    itemNumber: item?.itemNumber || '',
+    itemNumber: isEditing ? (item?.itemNumber || '') : (newItemNumber || ''),
     categoryId: item?.categoryId || '',
     supplierId: item?.supplierId || '',
     description: item?.description || '',
@@ -40,18 +41,11 @@ export const useRenovationForm = ({ item, onSubmit, onCancel, isEditing }: UseRe
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Basic validation
-    if (!formData.itemNumber.trim()) {
-      alert('Número do item é obrigatório');
-      return;
-    }
-    
     if (!formData.description.trim()) {
       alert('Descrição é obrigatória');
       return;
     }
     
-    // Convert special placeholder values back to empty strings
     const submissionData = {
       ...formData,
       categoryId: formData.categoryId === 'none' ? '' : formData.categoryId,
