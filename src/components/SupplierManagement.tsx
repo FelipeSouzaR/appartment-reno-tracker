@@ -26,7 +26,7 @@ const SupplierManagement: React.FC = () => {
     e.preventDefault();
     try {
       if (editingSupplier) {
-        await updateSupplier(editingSupplier.id, formData);
+        await updateSupplier({ id: editingSupplier.id, formData });
       } else {
         await createSupplier(formData);
       }
