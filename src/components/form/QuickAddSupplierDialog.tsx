@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,9 +32,7 @@ const QuickAddSupplierDialog: React.FC<QuickAddSupplierDialogProps> = ({
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleSave = async () => {
     if (!formData.name.trim()) {
       return;
     }
@@ -76,7 +73,7 @@ const QuickAddSupplierDialog: React.FC<QuickAddSupplierDialogProps> = ({
         <DialogHeader>
           <DialogTitle>Adicionar Novo Fornecedor</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="supplier-name">Nome *</Label>
             <Input
@@ -113,11 +110,11 @@ const QuickAddSupplierDialog: React.FC<QuickAddSupplierDialogProps> = ({
             <Button type="button" variant="outline" onClick={handleCancel}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSubmitting || !formData.name.trim()}>
+            <Button type="button" onClick={handleSave} disabled={isSubmitting || !formData.name.trim()}>
               {isSubmitting ? 'Criando...' : 'Criar Fornecedor'}
             </Button>
           </div>
-        </form>
+        </div>
       </DialogContent>
     </Dialog>
   );
