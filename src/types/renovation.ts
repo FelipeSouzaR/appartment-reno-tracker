@@ -1,3 +1,4 @@
+
 export interface Category {
   id: string;
   name: string;
@@ -47,6 +48,8 @@ export interface RenovationItem {
   status: 'Pendente' | 'Em Andamento' | 'Concluído' | 'Cancelado';
   paymentMethod?: string;
   observations?: string;
+  estimatedDurationDays?: number;
+  realDurationDays?: number;
   created_at: string;
   updated_at: string;
   // Joined data from foreign keys
@@ -69,6 +72,8 @@ export interface RenovationFormData {
   status: 'Pendente' | 'Em Andamento' | 'Concluído' | 'Cancelado';
   paymentMethod?: string;
   observations?: string;
+  estimatedDurationDays?: number;
+  realDurationDays?: number;
 }
 
 export interface CategoryFormData {

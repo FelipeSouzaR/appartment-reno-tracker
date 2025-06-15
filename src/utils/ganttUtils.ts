@@ -1,6 +1,6 @@
 
 import { RenovationItem } from '@/types/renovation';
-import { parseISO, isValid, format, min, max, addDays, subDays } from 'date-fns';
+import { parseISO, isValid, format, min, max, addDays, subDays, addBusinessDays } from 'date-fns';
 
 export interface GanttItem {
   id: string;
@@ -10,9 +10,12 @@ export interface GanttItem {
   categoryColor: string;
   plannedStart: Date | null;
   plannedEnd: Date | null;
-  executedDate: Date | null;
+  executedStart: Date | null;
+  executedEnd: Date | null;
   purchaseDate: Date | null;
   status: string;
+  estimatedDurationDays?: number;
+  realDurationDays?: number;
 }
 
 export interface GanttDateRange {
@@ -40,6 +43,11 @@ export const getCategoryColor = (categoryName: string, index: number): string =>
   return CATEGORY_COLORS[index % CATEGORY_COLORS.length];
 };
 
+export const calculateEndDate = (startDate: Date, durationDays: number): Date => {
+  // Use addBusinessDays for working days calculation
+  return addBusinessDays(startDate, durationDays);
+};
+
 export const processGanttData = (items: RenovationItem[]): { ganttItems: GanttItem[], dateRange: GanttDateRange, categories: string[] } => {
   const validDates: Date[] = [];
   const categories = new Set<string>();
@@ -51,12 +59,26 @@ export const processGanttData = (items: RenovationItem[]): { ganttItems: GanttIt
     
     if (item.plannedDate) {
       const plannedDate = parseISO(item.plannedDate);
-      if (isValid(plannedDate)) validDates.push(plannedDate);
+      if (isValid(plannedDate)) {
+        validDates.push(plannedDate);
+        // Add planned end date if duration is available
+        if (item.estimatedDurationDays) {
+          const plannedEnd = calculateEndDate(plannedDate, item.estimatedDurationDays);
+          validDates.push(plannedEnd);
+        }
+      }
     }
     
     if (item.executedDate) {
       const executedDate = parseISO(item.executedDate);
-      if (isValid(executedDate)) validDates.push(executedDate);
+      if (isValid(executedDate)) {
+        validDates.push(executedDate);
+        // Add executed end date if duration is available
+        if (item.realDurationDays) {
+          const executedEnd = calculateEndDate(executedDate, item.realDurationDays);
+          validDates.push(executedEnd);
+        }
+      }
     }
     
     if (item.purchaseDate) {
@@ -76,11 +98,11 @@ export const processGanttData = (items: RenovationItem[]): { ganttItems: GanttIt
     
     // Add padding
     startDate = subDays(startDate, 7);
-    endDate = addDays(endDate, 7);
+    endDate = addDays(endDate, 14);
   } else {
     // Default range if no dates
     startDate = subDays(today, 30);
-    endDate = addDays(today, 30);
+    endDate = addDays(today, 60);
   }
 
   const categoriesArray = Array.from(categories).sort();
@@ -90,17 +112,30 @@ export const processGanttData = (items: RenovationItem[]): { ganttItems: GanttIt
     const categoryName = item.category_data?.name || item.category || 'Sem categoria';
     const categoryIndex = categoriesArray.indexOf(categoryName);
     
+    const plannedStart = item.plannedDate ? parseISO(item.plannedDate) : null;
+    const plannedEnd = plannedStart && item.estimatedDurationDays 
+      ? calculateEndDate(plannedStart, item.estimatedDurationDays) 
+      : null;
+      
+    const executedStart = item.executedDate ? parseISO(item.executedDate) : null;
+    const executedEnd = executedStart && item.realDurationDays 
+      ? calculateEndDate(executedStart, item.realDurationDays) 
+      : null;
+    
     return {
       id: item.id,
       itemNumber: item.itemNumber,
       description: item.description,
       category: categoryName,
       categoryColor: getCategoryColor(categoryName, categoryIndex),
-      plannedStart: item.plannedDate ? parseISO(item.plannedDate) : null,
-      plannedEnd: item.executedDate ? parseISO(item.executedDate) : (item.plannedDate ? addDays(parseISO(item.plannedDate), 1) : null),
-      executedDate: item.executedDate ? parseISO(item.executedDate) : null,
+      plannedStart,
+      plannedEnd,
+      executedStart,
+      executedEnd,
       purchaseDate: item.purchaseDate ? parseISO(item.purchaseDate) : null,
       status: item.status,
+      estimatedDurationDays: item.estimatedDurationDays,
+      realDurationDays: item.realDurationDays,
     };
   });
 
@@ -118,4 +153,29 @@ export const formatDateForGantt = (date: Date): string => {
 export const getDaysBetweenDates = (startDate: Date, endDate: Date): number => {
   const timeDiff = endDate.getTime() - startDate.getTime();
   return Math.ceil(timeDiff / (1000 * 3600 * 24));
+};
+
+export const calculateRenovationEndDate = (items: RenovationItem[]): { estimatedEndDate: Date | null, actualEndDate: Date | null } => {
+  let estimatedEndDate: Date | null = null;
+  let actualEndDate: Date | null = null;
+  
+  items.forEach(item => {
+    // Calculate estimated end date
+    if (item.plannedDate && item.estimatedDurationDays) {
+      const itemEstimatedEnd = calculateEndDate(parseISO(item.plannedDate), item.estimatedDurationDays);
+      if (!estimatedEndDate || itemEstimatedEnd > estimatedEndDate) {
+        estimatedEndDate = itemEstimatedEnd;
+      }
+    }
+    
+    // Calculate actual end date
+    if (item.executedDate && item.realDurationDays) {
+      const itemActualEnd = calculateEndDate(parseISO(item.executedDate), item.realDurationDays);
+      if (!actualEndDate || itemActualEnd > actualEndDate) {
+        actualEndDate = itemActualEnd;
+      }
+    }
+  });
+  
+  return { estimatedEndDate, actualEndDate };
 };

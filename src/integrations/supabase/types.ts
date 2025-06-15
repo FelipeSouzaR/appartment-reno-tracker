@@ -64,6 +64,7 @@ export type Database = {
           category_id: string | null
           created_at: string
           description: string
+          estimated_duration_days: number | null
           estimated_price: number
           executed_date: string | null
           id: string
@@ -73,6 +74,7 @@ export type Database = {
           payment_method: string | null
           planned_date: string | null
           purchase_date: string | null
+          real_duration_days: number | null
           renovation_id: string | null
           status: string
           supplier: string
@@ -85,6 +87,7 @@ export type Database = {
           category_id?: string | null
           created_at?: string
           description: string
+          estimated_duration_days?: number | null
           estimated_price?: number
           executed_date?: string | null
           id?: string
@@ -94,6 +97,7 @@ export type Database = {
           payment_method?: string | null
           planned_date?: string | null
           purchase_date?: string | null
+          real_duration_days?: number | null
           renovation_id?: string | null
           status?: string
           supplier: string
@@ -106,6 +110,7 @@ export type Database = {
           category_id?: string | null
           created_at?: string
           description?: string
+          estimated_duration_days?: number | null
           estimated_price?: number
           executed_date?: string | null
           id?: string
@@ -115,6 +120,7 @@ export type Database = {
           payment_method?: string | null
           planned_date?: string | null
           purchase_date?: string | null
+          real_duration_days?: number | null
           renovation_id?: string | null
           status?: string
           supplier?: string

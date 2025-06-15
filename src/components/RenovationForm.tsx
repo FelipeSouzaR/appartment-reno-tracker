@@ -36,6 +36,8 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
     status: item?.status || 'Pendente',
     paymentMethod: item?.paymentMethod || '',
     observations: item?.observations || '',
+    estimatedDurationDays: item?.estimatedDurationDays || undefined,
+    realDurationDays: item?.realDurationDays || undefined,
   });
 
   // Valores de display para os campos numéricos (strings vazias quando não há valor)
@@ -43,6 +45,8 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
     budget: item?.budget ? item.budget.toString() : '',
     estimatedPrice: item?.estimatedPrice ? item.estimatedPrice.toString() : '',
     paidValue: item?.paidValue ? item.paidValue.toString() : '',
+    estimatedDurationDays: item?.estimatedDurationDays ? item.estimatedDurationDays.toString() : '',
+    realDurationDays: item?.realDurationDays ? item.realDurationDays.toString() : '',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -80,6 +84,15 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
     
     // Converte para número ou mantém 0 se vazio
     const numericValue = value === '' ? 0 : parseFloat(value) || 0;
+    setFormData(prev => ({ ...prev, [field]: numericValue }));
+  };
+
+  const handleDurationInputChange = (field: 'estimatedDurationDays' | 'realDurationDays', value: string) => {
+    // Atualiza o valor de display
+    setDisplayValues(prev => ({ ...prev, [field]: value }));
+    
+    // Converte para número ou mantém undefined se vazio
+    const numericValue = value === '' ? undefined : parseInt(value) || undefined;
     setFormData(prev => ({ ...prev, [field]: numericValue }));
   };
 
@@ -219,7 +232,7 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="executedDate">Data Executada</Label>
+              <Label htmlFor="executedDate">Data de Início da Execução</Label>
               <Input
                 id="executedDate"
                 type="date"
@@ -234,6 +247,38 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
                 type="date"
                 value={formData.purchaseDate}
                 onChange={(e) => handleInputChange('purchaseDate', e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Duration Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="estimatedDurationDays">
+                Duração Estimada (dias úteis)
+                <span className="text-sm text-muted-foreground ml-2">- segunda a sexta</span>
+              </Label>
+              <Input
+                id="estimatedDurationDays"
+                type="number"
+                min="1"
+                value={displayValues.estimatedDurationDays}
+                onChange={(e) => handleDurationInputChange('estimatedDurationDays', e.target.value)}
+                placeholder="ex: 5"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="realDurationDays">
+                Duração Real (dias úteis)
+                <span className="text-sm text-muted-foreground ml-2">- segunda a sexta</span>
+              </Label>
+              <Input
+                id="realDurationDays"
+                type="number"
+                min="1"
+                value={displayValues.realDurationDays}
+                onChange={(e) => handleDurationInputChange('realDurationDays', e.target.value)}
+                placeholder="ex: 7"
               />
             </div>
           </div>

@@ -46,6 +46,8 @@ export const useRenovationItems = (renovationId?: string) => {
         status: item.status as 'Pendente' | 'Em Andamento' | 'Concluído' | 'Cancelado',
         paymentMethod: item.payment_method || undefined,
         observations: item.observations || undefined,
+        estimatedDurationDays: item.estimated_duration_days || undefined,
+        realDurationDays: item.real_duration_days || undefined,
         created_at: item.created_at,
         updated_at: item.updated_at,
         category_data: item.category_data ? {
@@ -114,6 +116,8 @@ export const useRenovationItems = (renovationId?: string) => {
         status: formData.status || 'Pendente',
         payment_method: formData.paymentMethod || null,
         observations: formData.observations || null,
+        estimated_duration_days: formData.estimatedDurationDays || null,
+        real_duration_days: formData.realDurationDays || null,
         // Keep legacy fields for compatibility
         category: '',
         supplier: '',
@@ -154,6 +158,8 @@ export const useRenovationItems = (renovationId?: string) => {
         status: data.status as 'Pendente' | 'Em Andamento' | 'Concluído' | 'Cancelado',
         paymentMethod: data.payment_method || undefined,
         observations: data.observations || undefined,
+        estimatedDurationDays: data.estimated_duration_days || undefined,
+        realDurationDays: data.real_duration_days || undefined,
         created_at: data.created_at,
         updated_at: data.updated_at,
         category_data: data.category_data ? {
@@ -213,6 +219,8 @@ export const useRenovationItems = (renovationId?: string) => {
           status: formData.status,
           payment_method: formData.paymentMethod || null,
           observations: formData.observations || null,
+          estimated_duration_days: formData.estimatedDurationDays || null,
+          real_duration_days: formData.realDurationDays || null,
           updated_at: new Date().toISOString(),
         })
         .eq('id', id)
@@ -243,6 +251,8 @@ export const useRenovationItems = (renovationId?: string) => {
         status: data.status as 'Pendente' | 'Em Andamento' | 'Concluído' | 'Cancelado',
         paymentMethod: data.payment_method || undefined,
         observations: data.observations || undefined,
+        estimatedDurationDays: data.estimated_duration_days || undefined,
+        realDurationDays: data.real_duration_days || undefined,
         created_at: data.created_at,
         updated_at: data.updated_at,
         category_data: data.category_data ? {
