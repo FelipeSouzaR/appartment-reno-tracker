@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -103,7 +102,7 @@ const RenovationTable: React.FC<RenovationTableProps> = ({ items, onEdit, onDele
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="whitespace-nowrap min-w-[80px]">Item #</TableHead>
+                  <TableHead className="whitespace-nowrap">Item#</TableHead>
                   <TableHead className="whitespace-nowrap">Categoria</TableHead>
                   <TableHead className="whitespace-nowrap">Descrição</TableHead>
                   <TableHead className="whitespace-nowrap">Fornecedor</TableHead>
