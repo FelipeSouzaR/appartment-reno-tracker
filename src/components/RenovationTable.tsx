@@ -3,6 +3,14 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
+} from '@/components/ui/table';
 import { Pencil, Trash2 } from 'lucide-react';
 import { RenovationItem } from '@/types/renovation';
 
@@ -92,40 +100,40 @@ const RenovationTable: React.FC<RenovationTableProps> = ({ items, onEdit, onDele
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left p-2 font-semibold">Item #</th>
-                  <th className="text-left p-2 font-semibold">Categoria</th>
-                  <th className="text-left p-2 font-semibold">Descrição</th>
-                  <th className="text-left p-2 font-semibold">Fornecedor</th>
-                  <th className="text-left p-2 font-semibold">Orçamento</th>
-                  <th className="text-left p-2 font-semibold">Estimado</th>
-                  <th className="text-left p-2 font-semibold">Pago</th>
-                  <th className="text-left p-2 font-semibold">Planejada</th>
-                  <th className="text-left p-2 font-semibold">Executada</th>
-                  <th className="text-left p-2 font-semibold">Compra</th>
-                  <th className="text-left p-2 font-semibold">Status</th>
-                  <th className="text-left p-2 font-semibold">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="whitespace-nowrap min-w-[80px]">Item #</TableHead>
+                  <TableHead className="whitespace-nowrap">Categoria</TableHead>
+                  <TableHead className="whitespace-nowrap">Descrição</TableHead>
+                  <TableHead className="whitespace-nowrap">Fornecedor</TableHead>
+                  <TableHead className="whitespace-nowrap text-right">Orçamento</TableHead>
+                  <TableHead className="whitespace-nowrap text-right">Estimado</TableHead>
+                  <TableHead className="whitespace-nowrap text-right">Pago</TableHead>
+                  <TableHead className="whitespace-nowrap">Planejada</TableHead>
+                  <TableHead className="whitespace-nowrap">Executada</TableHead>
+                  <TableHead className="whitespace-nowrap">Compra</TableHead>
+                  <TableHead className="whitespace-nowrap">Status</TableHead>
+                  <TableHead className="whitespace-nowrap">Ações</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {items.map((item) => (
-                  <tr key={item.id} className="border-b hover:bg-muted/50">
-                    <td className="p-2 font-mono text-sm">{item.itemNumber}</td>
-                    <td className="p-2">{item.category_data?.name || item.category || '-'}</td>
-                    <td className="p-2 max-w-xs truncate" title={item.description}>
+                  <TableRow key={item.id}>
+                    <TableCell className="font-mono text-sm whitespace-nowrap">{item.itemNumber}</TableCell>
+                    <TableCell className="whitespace-nowrap">{item.category_data?.name || item.category || '-'}</TableCell>
+                    <TableCell className="max-w-xs truncate" title={item.description}>
                       {item.description}
-                    </td>
-                    <td className="p-2">{item.supplier_data?.name || item.supplier || '-'}</td>
-                    <td className="p-2 text-right">{formatCurrency(item.budget)}</td>
-                    <td className="p-2 text-right">{formatCurrency(item.estimatedPrice)}</td>
-                    <td className="p-2 text-right">{formatCurrency(item.paidValue)}</td>
-                    <td className="p-2">{formatDate(item.plannedDate)}</td>
-                    <td className="p-2">{formatDate(item.executedDate)}</td>
-                    <td className="p-2">{formatDate(item.purchaseDate)}</td>
-                    <td className="p-2">{getStatusBadge(item.status)}</td>
-                    <td className="p-2">
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">{item.supplier_data?.name || item.supplier || '-'}</TableCell>
+                    <TableCell className="text-right whitespace-nowrap">{formatCurrency(item.budget)}</TableCell>
+                    <TableCell className="text-right whitespace-nowrap">{formatCurrency(item.estimatedPrice)}</TableCell>
+                    <TableCell className="text-right whitespace-nowrap">{formatCurrency(item.paidValue)}</TableCell>
+                    <TableCell className="whitespace-nowrap">{formatDate(item.plannedDate)}</TableCell>
+                    <TableCell className="whitespace-nowrap">{formatDate(item.executedDate)}</TableCell>
+                    <TableCell className="whitespace-nowrap">{formatDate(item.purchaseDate)}</TableCell>
+                    <TableCell className="whitespace-nowrap">{getStatusBadge(item.status)}</TableCell>
+                    <TableCell className="whitespace-nowrap">
                       <div className="flex space-x-2">
                         <Button
                           variant="outline"
@@ -144,11 +152,11 @@ const RenovationTable: React.FC<RenovationTableProps> = ({ items, onEdit, onDele
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         </CardContent>
       </Card>

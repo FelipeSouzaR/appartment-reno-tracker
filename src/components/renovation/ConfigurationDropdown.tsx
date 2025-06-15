@@ -25,7 +25,7 @@ const ConfigurationDropdown = ({
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="flex items-center space-x-2">
           <Settings className="h-4 w-4" />
-          <span className="hidden sm:inline">Configurações</span>
+          <span>Configurações</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48 bg-background">
