@@ -1,4 +1,3 @@
-
 export interface Category {
   id: string;
   name: string;
@@ -42,6 +41,8 @@ export interface RenovationItem {
   budget: number;
   estimatedPrice: number;
   purchaseDate?: string;
+  plannedDate?: string;
+  executedDate?: string;
   paidValue: number;
   status: 'Pendente' | 'Em Andamento' | 'Concluído' | 'Cancelado';
   paymentMethod?: string;
@@ -62,6 +63,8 @@ export interface RenovationFormData {
   budget: number;
   estimatedPrice: number;
   purchaseDate?: string;
+  plannedDate?: string;
+  executedDate?: string;
   paidValue: number;
   status: 'Pendente' | 'Em Andamento' | 'Concluído' | 'Cancelado';
   paymentMethod?: string;

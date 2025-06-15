@@ -65,11 +65,13 @@ export type Database = {
           created_at: string
           description: string
           estimated_price: number
+          executed_date: string | null
           id: string
           item_number: string
           observations: string | null
           paid_value: number
           payment_method: string | null
+          planned_date: string | null
           purchase_date: string | null
           renovation_id: string | null
           status: string
@@ -84,11 +86,13 @@ export type Database = {
           created_at?: string
           description: string
           estimated_price?: number
+          executed_date?: string | null
           id?: string
           item_number: string
           observations?: string | null
           paid_value?: number
           payment_method?: string | null
+          planned_date?: string | null
           purchase_date?: string | null
           renovation_id?: string | null
           status?: string
@@ -103,11 +107,13 @@ export type Database = {
           created_at?: string
           description?: string
           estimated_price?: number
+          executed_date?: string | null
           id?: string
           item_number?: string
           observations?: string | null
           paid_value?: number
           payment_method?: string | null
+          planned_date?: string | null
           purchase_date?: string | null
           renovation_id?: string | null
           status?: string

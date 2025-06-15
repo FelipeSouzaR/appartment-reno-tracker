@@ -30,6 +30,8 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
     budget: item?.budget || 0,
     estimatedPrice: item?.estimatedPrice || 0,
     purchaseDate: item?.purchaseDate || '',
+    plannedDate: item?.plannedDate || '',
+    executedDate: item?.executedDate || '',
     paidValue: item?.paidValue || 0,
     status: item?.status || 'Pendente',
     paymentMethod: item?.paymentMethod || '',
@@ -199,9 +201,27 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="purchaseDate">Data da Compra/Pagamento</Label>
+              <Label htmlFor="plannedDate">Data Planejada</Label>
+              <Input
+                id="plannedDate"
+                type="date"
+                value={formData.plannedDate}
+                onChange={(e) => handleInputChange('plannedDate', e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="executedDate">Data Executada</Label>
+              <Input
+                id="executedDate"
+                type="date"
+                value={formData.executedDate}
+                onChange={(e) => handleInputChange('executedDate', e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="purchaseDate">Data da Compra</Label>
               <Input
                 id="purchaseDate"
                 type="date"
@@ -209,20 +229,21 @@ const RenovationForm: React.FC<RenovationFormProps> = ({ item, onSubmit, onCance
                 onChange={(e) => handleInputChange('purchaseDate', e.target.value)}
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="status">Status</Label>
-              <Select value={formData.status} onValueChange={(value: any) => handleInputChange('status', value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Pendente">Pendente</SelectItem>
-                  <SelectItem value="Em Andamento">Em Andamento</SelectItem>
-                  <SelectItem value="Concluído">Concluído</SelectItem>
-                  <SelectItem value="Cancelado">Cancelado</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="status">Status</Label>
+            <Select value={formData.status} onValueChange={(value: any) => handleInputChange('status', value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione o status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Pendente">Pendente</SelectItem>
+                <SelectItem value="Em Andamento">Em Andamento</SelectItem>
+                <SelectItem value="Concluído">Concluído</SelectItem>
+                <SelectItem value="Cancelado">Cancelado</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
